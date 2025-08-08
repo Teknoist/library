@@ -1,37 +1,123 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Diş Implant Kütüphanesi</title>
-  <link rel="stylesheet" href="style.css" />
-  
-  <!-- Google Adsense (örnek, kendi kodunu ekle) -->
-  <script data-ad-client="ca-pub-XXXXXXXXXXXXXXX" async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Zip Kütüphane Arama</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #eee;
+    padding: 20px;
+  }
+  input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  li {
+    background: #1e1e1e;
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  li:hover {
+    background: #333;
+  }
+  a {
+    color: #90caf9;
+    text-decoration: none;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Diş Implant Kütüphanesi</h1>
-  </header>
-  
-  <main>
-    <input id="searchInput" type="search" placeholder="Marka veya dosya adı ara..." autofocus />
-    <ul id="results"></ul>
 
-    <!-- Google Ads alanı -->
-    <ins class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-      data-ad-slot="1234567890"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </main>
+<h1>Zip Kütüphane Arama</h1>
+<input id="searchInput" placeholder="Ara... veya * yaz tümünü göster" autofocus />
 
-  <script src="script.js"></script>
+<!-- Google Adsense Kodu (örnek) -->
+<div id="adsense-container" style="margin: 20px 0; text-align: center;">
+  <!-- Buraya Google Adsense script ve reklam kodunu koyacaksın -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXX"
+       data-ad-slot="YYYYYYYYYY"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+<ul id="results"></ul>
+
+<script>
+  let files = [];
+
+  // Küçük/büyük harf ve Türkçe karakter uyumlu normalize fonksiyonu
+  function normalize(text) {
+    return text.toLowerCase()
+      .replace(/İ/g, 'i')
+      .replace(/I/g, 'ı')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+  }
+
+  // Arama fonksiyonu
+  function searchFiles(files, query) {
+    if (query.trim() === '*') return files;
+    const q = normalize(query);
+    return files.filter(f => normalize(f.name).includes(q));
+  }
+
+  // Sonuçları güncelle
+  function updateResults() {
+    const query = document.getElementById('searchInput').value;
+    const results = searchFiles(files, query);
+
+    const ul = document.getElementById('results');
+    ul.innerHTML = '';
+
+    if(results.length === 0) {
+      ul.innerHTML = '<li>Sonuç bulunamadı.</li>';
+      return;
+    }
+
+    results.forEach(f => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = f.link;
+      a.textContent = f.name;
+      a.target = "_blank";
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+  }
+
+  // JSON dosyasını yükle ve ilk listeyi göster
+  fetch('files.json')
+    .then(response => response.json())
+    .then(data => {
+      files = data;
+      updateResults();
+    })
+    .catch(() => {
+      document.getElementById('results').innerHTML = '<li>Dosya yüklenemedi.</li>';
+    });
+
+  // Arama inputuna event ekle
+  document.getElementById('searchInput').addEventListener('input', updateResults);
+</script>
+
 </body>
 </html>
