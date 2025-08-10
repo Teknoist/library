@@ -1,5 +1,6 @@
 // Türkçe karakterleri normal hale çeviren fonksiyon
 function normalizeText(text) {
+  if (typeof text !== 'string') return '';  // String değilse boş string döndür
   const map = {
     'İ': 'i', 'I': 'i', 'ı': 'i', 'Ş': 's', 'ş': 's', 'Ğ': 'g', 'ğ': 'g',
     'Ü': 'u', 'ü': 'u', 'Ö': 'o', 'ö': 'o', 'Ç': 'c', 'ç': 'c'
@@ -13,6 +14,7 @@ async function loadFiles() {
   try {
     const res = await fetch('files.json');
     files = await res.json();
+    console.log('Dosyalar yüklendi:', files); // Yüklenen dosyaları kontrol için log
   } catch (e) {
     console.error('Dosyalar yüklenemedi:', e);
   }
@@ -21,7 +23,10 @@ async function loadFiles() {
 function searchFiles(query) {
   const q = normalizeText(query);
   if (!q) return [];
-  return files.filter(f => normalizeText(f.name).includes(q));
+  return files.filter(f => {
+    if (!f.name) return false; // name yoksa atla
+    return normalizeText(f.name).includes(q);
+  });
 }
 
 function renderResults(results) {
