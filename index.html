@@ -10,9 +10,6 @@
       --bg: #18181b;
       --card: #232326;
       --accent: #7f5af0;
-      --accent2: #f7c873;
-      --input-bg: #232326;
-      --input-focus-bg: #202025;
       --text: #e4e4e7;
       --border: #2a2a2e;
       --shadow: 0 4px 24px rgba(0,0,0,0.15);
@@ -60,75 +57,95 @@
       80% { opacity: 1; transform: scale(1.08);}
       100% { opacity: 1; transform: scale(1);}
     }
+    /* Animated Search Bar Styles */
     .search-container {
-      position: relative;
       width: 100%;
       max-width: 400px;
       margin-top: 0.2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       animation: fadeInSearch 1.2s cubic-bezier(.77,.01,.32,1.01);
     }
     @keyframes fadeInSearch {
       from { opacity: 0; transform: translateY(16px);}
       to   { opacity: 1; transform: none;}
     }
-    #searchInput {
-      width: 100%;
-      padding: 0.9rem 3rem 0.9rem 1.3rem;
-      border-radius: 1.9rem;
-      border: 1.5px solid var(--border);
-      background: var(--input-bg);
-      color: var(--text);
-      font-size: 1.11rem;
-      outline: none;
+    .animated-searchbar {
+      display: flex;
+      align-items: center;
+      width: 54px;
+      background: var(--card);
+      border-radius: 2rem;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      transition: 
-        box-shadow 0.35s cubic-bezier(.77,.01,.32,1.01), 
-        border 0.35s cubic-bezier(.77,.01,.32,1.01),
-        background 0.3s cubic-bezier(.77,.01,.32,1.01),
-        font-size 0.3s,
-        padding 0.25s;
-      will-change: box-shadow, border, background, font-size, padding;
-      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      transition: width 0.5s cubic-bezier(.77,.01,.32,1.01), box-shadow 0.3s;
+      overflow: hidden;
+      position: relative;
+      height: 48px;
     }
-    #searchInput:focus {
+    .animated-searchbar.active,
+    .animated-searchbar:focus-within {
+      width: 100%;
+      box-shadow: 0 6px 28px rgba(127,90,240,0.13), 0 2px 26px rgba(127,90,240,0.17);
       border-color: var(--accent);
-      box-shadow: 0 4px 32px rgba(127,90,240,0.12), 0 2px 26px rgba(127,90,240,0.17);
-      background: var(--input-focus-bg);
-      font-size: 1.13rem;
-      padding-left: 1.6rem;
-      padding-right: 3.2rem;
     }
-    #searchInput::placeholder {
+    .animated-searchbar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0 2rem 0 1.2rem;
+      font-size: 1.13rem;
+      color: var(--text);
+      transition: opacity 0.3s, padding 0.3s;
+      opacity: 0;
+      width: 100%;
+      /* Hide input by default */
+    }
+    .animated-searchbar.active input,
+    .animated-searchbar:focus-within input {
+      opacity: 1;
+      padding: 0 2rem 0 1.2rem;
+    }
+    .search-icon-btn {
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      width: 48px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      color: #aaa;
+      transition: color 0.2s;
+    }
+    .animated-searchbar.active .search-icon-btn,
+    .animated-searchbar:focus-within .search-icon-btn {
+      color: var(--accent);
+    }
+    .search-icon-btn svg {
+      width: 26px;
+      height: 26px;
+      display: block;
+    }
+    /* Hide icon if input is focused for better look */
+    .animated-searchbar.active .search-icon-btn,
+    .animated-searchbar:focus-within .search-icon-btn {
+      filter: drop-shadow(0 2px 10px #7f5af088);
+    }
+    /* Placeholder Style */
+    .animated-searchbar input::placeholder {
       color: #aaa;
       opacity: 0.8;
       font-size: 1rem;
       letter-spacing: 0.01em;
       transition: color 0.2s;
-    }
-    .search-icon {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: filter 0.3s, color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 1.8rem;
-      width: 1.8rem;
-      pointer-events: none;
-      color: #aaa;
-    }
-    #searchInput:focus ~ .search-icon {
-      color: var(--accent);
-      filter: drop-shadow(0 2px 10px #7f5af088);
-    }
-    .search-icon svg {
-      display: block;
-      height: 1.6rem;
-      width: 1.6rem;
-      margin: 0 auto;
-      transition: color 0.2s, filter 0.3s;
     }
     main {
       flex: 1;
@@ -159,7 +176,6 @@
       opacity: 0;
       transform: translateY(22px) scale(.98);
       animation: resultCardIn 0.6s cubic-bezier(.77,.01,.32,1.01) forwards;
-      /* Stagger animation via JS: inline style animation-delay can be set for each li */
     }
     @keyframes resultCardIn {
       from { opacity: 0; transform: translateY(22px) scale(.98);}
@@ -181,18 +197,18 @@
       transition: color 0.2s;
     }
     #results li:hover a, #results li:focus a {
-      color: var(--accent2);
+      color: #f7c873;
     }
     /* Responsive */
     @media (max-width: 600px) {
       header { padding: 1.2rem 0 1rem 0; }
       .main-title { font-size: 1.25rem; }
-      #searchInput { font-size: 1rem; }
       main { padding: 1rem 0.4rem 1.2rem 0.4rem; }
       #results li { padding: 0.9rem 0.8rem; }
       #results { max-width: 98vw; }
-      .search-icon { height: 1.45rem; width: 1.45rem; }
-      .search-icon svg { height: 1.2rem; width: 1.2rem; }
+      .animated-searchbar { height: 40px; }
+      .search-icon-btn { height: 40px; width: 40px; }
+      .search-icon-btn svg { width: 20px; height: 20px; }
     }
   </style>
 </head>
@@ -200,13 +216,15 @@
   <header>
     <div class="main-title">Kütüphane Arama</div>
     <div class="search-container">
-      <input id="searchInput" placeholder="Ara... veya '*' yaz tümünü göster" autocomplete="off" />
-      <span class="search-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-          <line x1="17.2" y1="17.2" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </span>
+      <form class="animated-searchbar" id="animated-searchbar" autocomplete="off" onsubmit="return false;">
+        <button type="button" class="search-icon-btn" id="search-activate">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <line x1="17.2" y1="17.2" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <input id="searchInput" placeholder="Ara... veya '*' yaz tümünü göster" autocomplete="off" />
+      </form>
     </div>
   </header>
   <main>
@@ -214,6 +232,23 @@
       <!-- Sonuçlar buraya gelecek. search.js otomatik dolduracak. -->
     </ul>
   </main>
+  <script>
+    // Animate bar open/close
+    const bar = document.getElementById('animated-searchbar');
+    const btn = document.getElementById('search-activate');
+    const input = document.getElementById('searchInput');
+    btn.addEventListener('click', () => {
+      bar.classList.add('active');
+      input.focus();
+    });
+    input.addEventListener('blur', () => {
+      if (!input.value) bar.classList.remove('active');
+    });
+    // On page load, if input already has value, show bar active
+    window.addEventListener('DOMContentLoaded', () => {
+      if (input.value) bar.classList.add('active');
+    });
+  </script>
   <script src="search.js"></script>
 </body>
 </html>
