@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kütüphane Arama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #18181b;
+      --card: #232326;
+      --accent: #7f5af0;
+      --accent2: #f7c873;
+      --input-bg: #232326;
+      --input-focus-bg: #202025;
+      --text: #e4e4e7;
+      --border: #2a2a2e;
+      --shadow: 0 4px 24px rgba(0,0,0,0.15);
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      animation: fadeInBody 1.2s cubic-bezier(.85,.01,.41,1.01);
+    }
+    @keyframes fadeInBody {
+      from { opacity: 0; transform: translateY(20px);}
+      to   { opacity: 1; transform: none;}
+    }
+    header {
+      width: 100%;
+      padding: 2rem 0 1.2rem 0;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      user-select: none;
+      animation: logoPop 1s cubic-bezier(.77,.01,.32,1.01);
+    }
+    @keyframes logoPop {
+      0% { opacity: 0; transform: scale(0.7);}
+      80% { opacity: 1; transform: scale(1.12);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .logo svg {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      fill: var(--accent2);
+      filter: drop-shadow(0 2px 8px #7f5af088);
+      transition: fill 0.3s;
+    }
+    .search-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      margin-top: 0.4rem;
+      animation: fadeInSearch 1.4s cubic-bezier(.77,.01,.32,1.01);
+    }
+    @keyframes fadeInSearch {
+      from { opacity: 0; transform: translateY(16px);}
+      to   { opacity: 1; transform: none;}
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 1rem 3.2rem 1rem 1.2rem;
+      border-radius: 2.2rem;
+      border: 1.5px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 1.12rem;
+      outline: none;
+      box-shadow: 0 2px 18px rgba(0,0,0,0.08);
+      transition: 
+        box-shadow 0.35s cubic-bezier(.77,.01,.32,1.01), 
+        border 0.35s cubic-bezier(.77,.01,.32,1.01),
+        background 0.3s cubic-bezier(.77,.01,.32,1.01),
+        font-size 0.3s,
+        padding 0.25s;
+      will-change: box-shadow, border, background, font-size, padding;
+      background: var(--input-bg);
+    }
+    #searchInput:focus {
+      border-color: var(--accent);
+      box-shadow: 0 4px 32px rgba(127,90,240,0.10), 0 2px 26px rgba(127,90,240,0.16);
+      background: var(--input-focus-bg);
+      font-size: 1.18rem;
+      padding-left: 1.5rem;
+      padding-right: 3.5rem;
+    }
+    #searchInput::placeholder {
+      color: #aaa;
+      opacity: 0.8;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+    .search-icon {
+      position: absolute;
+      right: 1.3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.8;
+      transition: opacity 0.2s, filter 0.2s;
+      filter: drop-shadow(0 2px 5px #7f5af066);
+    }
+    #searchInput:focus ~ .search-icon {
+      opacity: 1;
+      filter: drop-shadow(0 2px 12px #7f5af0cc);
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem 1rem 2.5rem 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    #results {
+      width: 100%;
+      max-width: 520px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    #results li {
+      background: var(--card);
+      border-radius: 1.2rem;
+      box-shadow: var(--shadow);
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(22px) scale(.98);
+      animation: resultCardIn 0.6s cubic-bezier(.77,.01,.32,1.01) forwards;
+      /* Stagger animation via JS: inline style animation-delay can be set for each li */
+    }
+    @keyframes resultCardIn {
+      from { opacity: 0; transform: translateY(22px) scale(.98);}
+      70% { opacity: 1; transform: translateY(-5px) scale(1.03);}
+      to   { opacity: 1; transform: none;}
+    }
+    #results li:hover, #results li:focus {
+      box-shadow: 0 8px 32px rgba(127,90,240,0.18);
+      transform: scale(1.03);
+      border-color: var(--accent);
+      background: linear-gradient(102deg, #232326 80%, #18181b 100%);
+    }
+    #results li a {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 1.12rem;
+      text-decoration: none;
+      word-break: break-word;
+      transition: color 0.2s;
+    }
+    #results li:hover a, #results li:focus a {
+      color: var(--accent2);
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0 1rem 0; }
+      .logo { font-size: 1.3rem; }
+      #searchInput { font-size: 1rem; }
+      main { padding: 1rem 0.4rem 1.2rem 0.4rem; }
+      #results li { padding: 0.9rem 0.8rem; }
+      #results { max-width: 98vw; }
+      .logo svg { width: 32px; height: 32px;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <svg viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="20" fill="#f7c873"/>
+        <path d="M24 6a18 18 0 1 1 0 36 18 18 0 1 1 0-36z" fill="#7f5af0" opacity="0.9"/>
+        <text x="24" y="30" text-anchor="middle" font-size="20" fill="#18181b" font-family="Inter,Arial" font-weight="bold">EX</text>
+      </svg>
+      Kütüphane Arama
+    </div>
+    <div class="search-container">
+      <input id="searchInput" placeholder="Kitap ara... veya '*' yaz tümünü göster" autocomplete="off" />
+      <span class="search-icon">
+        <svg width="22" height="22" viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="#7f5af0" stroke-width="2" fill="none"/><line x1="15" y1="15" x2="19" y2="19" stroke="#7f5af0" stroke-width="2"/></svg>
+      </span>
+    </div>
+  </header>
+  <main>
+    <ul id="results">
+      <!-- Sonuçlar buraya gelecek. search.js otomatik dolduracak. -->
+    </ul>
+  </main>
+  <script src="search.js"></script>
+</body>
+</html>
