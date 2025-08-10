@@ -51,6 +51,7 @@
       color: var(--accent);
       user-select: none;
       animation: logoPop 0.9s cubic-bezier(.77,.01,.32,1.01);
+      margin-bottom: 0.8rem;
     }
     @keyframes logoPop {
       0% { opacity: 0; transform: scale(0.7);}
@@ -61,9 +62,9 @@
     .search-container {
       width: 100%;
       max-width: 400px;
-      margin-top: 0.2rem;
+      margin-top: 0.1rem;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       animation: fadeInSearch 1.2s cubic-bezier(.77,.01,.32,1.01);
     }
@@ -83,6 +84,7 @@
       overflow: hidden;
       position: relative;
       height: 48px;
+      margin-left: 0; /* solda başlasın */
     }
     .animated-searchbar.active,
     .animated-searchbar:focus-within {
@@ -101,12 +103,11 @@
       transition: opacity 0.3s, padding 0.3s;
       opacity: 0;
       width: 100%;
-      /* Hide input by default */
     }
     .animated-searchbar.active input,
     .animated-searchbar:focus-within input {
       opacity: 1;
-      padding: 0 2rem 0 1.2rem;
+      padding: 0 2rem 0 2.8rem; /* arama ikonundan uzaklaştırıldı */
     }
     .search-icon-btn {
       background: none;
@@ -134,7 +135,6 @@
       height: 26px;
       display: block;
     }
-    /* Hide icon if input is focused for better look */
     .animated-searchbar.active .search-icon-btn,
     .animated-searchbar:focus-within .search-icon-btn {
       filter: drop-shadow(0 2px 10px #7f5af088);
@@ -244,7 +244,6 @@
     input.addEventListener('blur', () => {
       if (!input.value) bar.classList.remove('active');
     });
-    // On page load, if input already has value, show bar active
     window.addEventListener('DOMContentLoaded', () => {
       if (input.value) bar.classList.add('active');
     });
