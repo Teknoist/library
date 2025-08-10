@@ -42,7 +42,7 @@ function renderResults(results) {
 // JSON dosyasını yükle
 async function loadFiles() {
   try {
-    const res = await fetch('https://raw.githubusercontent.com/Teknoist/library/refs/heads/main/files.json');
+    const res = await fetch('files.json');
     files = await res.json();
     renderResults(files); // ilk yüklemede tüm dosyaları göster
   } catch (e) {
