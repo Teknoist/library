@@ -1,11 +1,12 @@
-// Türkçe karakterleri normal hale çeviren fonksiyon
 function normalizeText(text) {
-  if (typeof text !== 'string') return '';  // String değilse boş string döndür
+  if (!text || typeof text !== 'string') return '';
   const map = {
     'İ': 'i', 'I': 'i', 'ı': 'i', 'Ş': 's', 'ş': 's', 'Ğ': 'g', 'ğ': 'g',
     'Ü': 'u', 'ü': 'u', 'Ö': 'o', 'ö': 'o', 'Ç': 'c', 'ç': 'c'
   };
-  return text.replace(/[\u0130IıŞşĞğÜüÖöÇç]/g, c => map[c] || c).toLowerCase();
+  let normalized = text.replace(/[\u0130IıŞşĞğÜüÖöÇç]/g, c => map[c] || c);
+  normalized = normalized.replace(/[^a-zA-Z0-9\s]/g, ''); // özel karakterleri sil
+  return normalized.toLowerCase();
 }
 
 let files = [];
@@ -14,7 +15,7 @@ async function loadFiles() {
   try {
     const res = await fetch('files.json');
     files = await res.json();
-    console.log('Dosyalar yüklendi:', files); // Yüklenen dosyaları kontrol için log
+    console.log('Dosyalar yüklendi:', files);
   } catch (e) {
     console.error('Dosyalar yüklenemedi:', e);
   }
@@ -24,8 +25,8 @@ function searchFiles(query) {
   const q = normalizeText(query);
   if (!q) return [];
   return files.filter(f => {
-    if (!f.name) return false; // name yoksa atla
-    return normalizeText(f.name).includes(q);
+    const name = normalizeText(f.name || '');
+    return name.includes(q);
   });
 }
 
@@ -53,4 +54,4 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
   renderResults(results);
 });
 
-window.onload = loadFiles;
+window.addEventListener('load', loadFiles);
