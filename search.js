@@ -1,66 +1,62 @@
 let files = [];
 
-// Küçük/büyük harf ve Türkçe karakter uyumlu normalize fonksiyonu
+// Türkçe karakterleri ve özel sembolleri normalize eden fonksiyon
 function normalize(text) {
-  return text.toLowerCase()
-    .replace(/İ/g, 'i')
-    .replace(/I/g, 'ı')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+  if (!text || typeof text !== 'string') return '';
+  const map = {
+    'İ': 'i', 'I': 'i', 'ı': 'i', 'Ş': 's', 'ş': 's', 'Ğ': 'g', 'ğ': 'g',
+    'Ü': 'u', 'ü': 'u', 'Ö': 'o', 'ö': 'o', 'Ç': 'c', 'ç': 'c'
+  };
+  let normalized = text.replace(/[\u0130IıŞşĞğÜüÖöÇç]/g, c => map[c] || c);
+  normalized = normalized.replace(/[^a-zA-Z0-9\s]/g, ''); // özel karakterleri sil
+  return normalized.toLowerCase();
 }
 
-// Arama fonksiyonu
-function searchFiles(files, query) {
-  if (query.trim() === '*') return files;
+// Arama fonksiyonu (sadece name üzerinden)
+function searchFiles(query) {
   const q = normalize(query);
-  return files.filter(f => normalize(f.name).includes(q) || normalize(f.brand).includes(q));
+  if (!q || q === '*') return files;
+  return files.filter(f => normalize(f.name || '').includes(q));
 }
 
-// Sonuçları güncelle
-function updateResults() {
-  const query = document.getElementById('searchInput').value;
-  const results = searchFiles(files, query);
-
-  const ul = document.getElementById('results');
-  ul.innerHTML = '';
-
-  if(results.length === 0) {
-    ul.innerHTML = '<li>Sonuç bulunamadı.</li>';
+// Sonuçları ekrana yazdır
+function renderResults(results) {
+  const resultsEl = document.getElementById('results');
+  resultsEl.innerHTML = '';
+  if (results.length === 0) {
+    resultsEl.innerHTML = '<li>Sonuç bulunamadı.</li>';
     return;
   }
-
-  results.forEach(f => {
+  for (const file of results) {
     const li = document.createElement('li');
-
     const a = document.createElement('a');
-    a.href = f.download_url;
-    a.textContent = f.name;
-    a.target = "_blank";
+    a.href = file.download_url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = file.name;
     li.appendChild(a);
-
-    const brandSpan = document.createElement('span');
-    brandSpan.className = 'brand';
-    brandSpan.textContent = f.brand;
-    li.appendChild(brandSpan);
-
-    ul.appendChild(li);
-  });
+    resultsEl.appendChild(li);
+  }
 }
 
-// JSON dosyasını yükle ve ilk listeyi göster
-function loadFiles() {
-  fetch('files.json')
-    .then(response => response.json())
-    .then(data => {
-      files = data;
-      updateResults();
-    })
-    .catch(() => {
-      document.getElementById('results').innerHTML = '<li>Dosya yüklenemedi.</li>';
-    });
+// JSON dosyasını yükle
+async function loadFiles() {
+  try {
+    const res = await fetch('files.json');
+    files = await res.json();
+    renderResults(files); // ilk yüklemede tüm dosyaları göster
+  } catch (e) {
+    document.getElementById('results').innerHTML = '<li>Dosya yüklenemedi.</li>';
+    console.error('Dosya yükleme hatası:', e);
+  }
 }
 
-// Sayfa yüklendiğinde dosyaları yükle ve arama inputuna event ata
+// Sayfa yüklendiğinde başlat
 document.addEventListener('DOMContentLoaded', () => {
   loadFiles();
-  document.getElementById('searchInput').addEventListener('input', updateResults);
+  document.getElementById('searchInput').addEventListener('input', () => {
+    const query = document.getElementById('searchInput').value;
+    const results = searchFiles(query);
+    renderResults(results);
+  });
 });
