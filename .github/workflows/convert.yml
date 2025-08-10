@@ -1,10 +1,10 @@
-name: Convert Links to JSON
+name: Update files.json when links.txt changes
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    paths:
+      - "links.txt"  # sadece links.txt değişince çalışır
+  workflow_dispatch: # elle tetiklemek istersen
 
 permissions:
   contents: write
@@ -22,7 +22,7 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Run script
+    - name: Run convert script
       run: python convert.py
 
     - name: Commit and push changes
