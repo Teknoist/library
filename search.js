@@ -39,10 +39,11 @@ function renderResults(results) {
   }
 }
 
-// JSON dosyasını yükle
+// JSON dosyasını yükle (cache bypass için zaman damgası ekliyoruz)
 async function loadFiles() {
   try {
-    const res = await fetch('files.json');
+    const timestamp = Date.now(); // her seferinde farklı URL
+    const res = await fetch(`files.json?v=${timestamp}`);
     files = await res.json();
     renderResults(files); // ilk yüklemede tüm dosyaları göster
   } catch (e) {
@@ -54,9 +55,14 @@ async function loadFiles() {
 // Sayfa yüklendiğinde başlat
 document.addEventListener('DOMContentLoaded', () => {
   loadFiles();
-  document.getElementById('searchInput').addEventListener('input', () => {
-    const query = document.getElementById('searchInput').value;
+
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value;
     const results = searchFiles(query);
     renderResults(results);
   });
+
+  // UX: Sayfa açıldığında arama kutusuna odaklan
+  searchInput.focus();
 });
