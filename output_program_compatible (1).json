@@ -1,0 +1,246 @@
+{
+    "framework": [
+        {
+            "Name": "exocadFramework2019.exe",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAxOS5leGU="
+        },
+        {
+            "Name": "exocadFramework2020.exe",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyMC5leGU="
+        },
+        {
+            "Name": "exocadFramework2022.exe",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyMi5leGU="
+        },
+        {
+            "Name": "exocadFramework2023.exe",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyMy5leGU="
+        },
+        {
+            "Name": "exocadFramework2024.exe",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyNC5leGU="
+        }
+    ],
+    "chairside": [
+        {
+            "Name": "ChairsideCAD3.0 2021 09 20.7z",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkLUNoYWlyc2lkZUNBRDMuMC0yMDIxLTA5LTIwLjd6"
+        },
+        {
+            "Name": "ChairsideCAD3.1 2023 03 29.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2NoYWlyc2lkZS9leG9jYWQtQ2hhaXJzaWRlQ0FEMy4xLTIwMjMtMDMtMjkuN3o="
+        }
+    ],
+    "dentalcad": [
+        {
+            "Name": "DentalCAD 64Bit 2019 02 20.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b2NhZC1EZW50YWxDQUQtNjRCaXQtMjAxOS0wMi0yMC43eg=="
+        },
+        {
+            "Name": "DentalCAD 64Bit 2020 02 06.7z",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkLURlbnRhbENBRC02NEJpdC0yMDIwLTAyLTA2Ljd6"
+        },
+        {
+            "Name": "DentalCAD3.0 2020 12 23.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b2NhZC1EZW50YWxDQUQzLjAtMjAyMC0xMi0yMy43eg=="
+        },
+        {
+            "Name": "DentalCAD3.0 2021 03 25.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b2NhZC1EZW50YWxDQUQzLjAtMjAyMS0wMy0yNS43eg=="
+        },
+        {
+            "Name": "DentalCAD3.1 2022 06 14.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b2NhZC1EZW50YWxDQUQzLjEtMjAyMi0wNi0xNC43eg=="
+        },
+        {
+            "Name": "DentalCAD3.1 2022 11 10.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b2NhZC1EZW50YWxDQUQzLjEtMjAyMi0xMS0xMC43eg=="
+        },
+        {
+            "Name": "DentalCAD3.2 2024 02 24.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2UyZjljNzMxMTJhYjkxZmI4NDI4NzdlZWI1YjRlYjBiODQxYjg1MmViM2RiNDlkNGRlMjc1MzczY2QwNjZkMDAvZXhvY2FkLURlbnRhbENBRDMuMi0yMDI0LTAyLTI0Ljd6"
+        },
+        {
+            "Name": "DentalCAD3.2 FR 2024 09 27.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2Q0NmM3NzBhZTBlODRkOWU0MTk3NmY4OTVjNTdlMzAwMDViY2ZjZGVlYWZlN2MxNGEzOTU5NDVjZjI0MGUxMTIvZXhvY2FkLURlbnRhbENBRDMuMi1GUi0yMDI0LTA5LTI3Ljd6"
+        },
+        {
+            "Name": "DentalCAD3.2 FR FDA 2024 09 28.7z",
+            "Url": "aHR0cHM6Ly9jZG4uZXhvY2FkLmNvbS9kZWxpdmVyeS81MDdjMjFmMDZlOWE0YzZjNDU1NTM3ZDc2N2VmYjA5NjMwMDc0NzM4YWMzZmY2OWZiMzQyY2RkM2NjMWMyOTNiL2V4b2NhZC1EZW50YWxDQUQzLjItRlItRkRBLTIwMjQtMDktMjguN3o="
+        },
+        {
+            "Name": "DentalCAD3.3 2025 10 16.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5LzNmYmE5Y2ZjYzFlMDM4ZDYyMmFiOGEzNjJlZTI1MWMyNjI5NmUxNzVmYjdiOGI0NjRkYWRkY2Y2ODgzNjNjOTgvZXhvY2FkLURlbnRhbENBRDMuMy0yMDI1LTEwLTE2Ljd6"
+        },
+        {
+            "Name": "DentalCAD3.3 SR 2024 09 27.7z",
+            "Url": "aHR0cHM6Ly9jZG4uZXhvY2FkLmNvbS9kZWxpdmVyeS9mOGZlNTVhNGU4YjQwY2YxN2JhNDU2MmFhOTg1MjE0OTJhMzQwM2U4OWFlODc1YmRlZjcyNDMzYzNhYmI5OWQwL2V4b2NhZC1EZW50YWxDQUQzLjMtU1IxLTIwMjYtMDEtMTYuN3o="
+        }
+    ],
+    "exoplan": [
+        {
+            "Name": "exoplan2.3 2019 10 23 built 2020 05 04.7z",
+            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvcGxhbi9leG9jYWQtZXhvcGxhbjIuMy0yMDE5LTEwLTIzLWJ1aWx0LTIwMjAtMDUtMDQuN3o="
+        },
+        {
+            "Name": "exoplan3.0 2021 03 08.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b3BsYW4vZXhvY2FkLWV4b3BsYW4zLjAtMjAyMS0wMy0wOC43eg=="
+        },
+        {
+            "Name": "exoplan3.0 2022 08 24.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b3BsYW4vZXhvY2FkLWV4b3BsYW4zLjAtMjAyMi0wOC0yNC43eg=="
+        },
+        {
+            "Name": "exoplan3.1 2023 01 23.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b3BsYW4vZXhvY2FkLWV4b3BsYW4zLjEtMjAyMy0wMS0yMy43eg=="
+        },
+        {
+            "Name": "exoplan3.1 2023 09 14.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b3BsYW4vZXhvY2FkLWV4b3BsYW4zLjEtMjAyMy0wOS0xNC43eg=="
+        },
+        {
+            "Name": "exoplan3.1 2023 12 18.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b3BsYW4vZXhvY2FkLWV4b3BsYW4zLjEtMjAyMy0xMi0xOC43eg=="
+        },
+        {
+            "Name": "exoplan3.1 2024 06 05.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b3BsYW4vMjBlYTljYWRlMmM4OTA2YmY0MmYxY2FkMzM0OTNhODI1OTAzNjVhNzU0ZDlkZmQ5MmI2ZDA5ZmFmNWY5YTE1ZC9leG9jYWQtZXhvcGxhbjMuMS0yMDI0LTA2LTA1Ljd6"
+        },
+        {
+            "Name": "exoplan3.1 2025 01 14.7z",
+            "Url": "aHR0cHM6Ly9jZG4uZXhvY2FkLmNvbS9kZWxpdmVyeS9leG9wbGFuL2V4b2NhZC1leG9wbGFuMy4xLTIwMjUtMDEtMTQuN3o="
+        }
+    ],
+    "partialcad": [
+        {
+            "Name": "PartialCADApp.2.4.263 Plovdiv.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L1BhcnRpYWxDQURBcHAuMi40LjI2My1QbG92ZGl2Ljd6"
+        },
+        {
+            "Name": "PartialCADApp.3.1.500 Rijeka.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L1BhcnRpYWxDQURBcHAuMy4xLjUwMC1SaWpla2EuN3o="
+        },
+        {
+            "Name": "PartialCADApp.3.2.616 Elefsina.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L3BhcnRpYWxDQUQvODNkM2MxODRhYzkzNDExM2YyMWY2OWExOGFjOTUxOWYxMTI3YWQ3ZmYxYmE0ZGVmYWIyNzI2MzE2ODQwODY3Ni9QYXJ0aWFsQ0FEQXBwLjMuMi42MTYtRWxlZnNpbmEuN3o="
+        },
+        {
+            "Name": "PartialCADApp.3.3.665 Chemnitz.7z",
+            "Url": "aHR0cHM6Ly9jZG4uZXhvY2FkLmNvbS9kZWxpdmVyeS9wYXJ0aWFsQ0FEL1BhcnRpYWxDQURBcHAuMy4zLjY2NS1aN00yUTktQ2hlbW5pdHouN3o="
+        }
+    ],
+    "implant_editor": [
+        {
+            "Name": "exoImplantEditor 2024 02 01 generic release3.1 implantplanning.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b0ltcGxhbnRFZGl0b3ItMjAyNC0wMi0wMS1nZW5lcmljLXJlbGVhc2UzLjEtaW1wbGFudHBsYW5uaW5nLjd6"
+        },
+        {
+            "Name": "exoImplantEditor 2023 02 23 generic implantplanningrelease3.1 implantplanning.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b0ltcGxhbnRFZGl0b3ItMjAyMy0wMi0yMy1nZW5lcmljLWltcGxhbnRwbGFubmluZ3JlbGVhc2UzLjEtaW1wbGFudHBsYW5uaW5nLjd6"
+        },
+        {
+            "Name": "exoImplantEditor 2021 11 22 generic release3.0 dentalcadapp.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b0ltcGxhbnRFZGl0b3ItMjAyMS0xMS0yMi1nZW5lcmljLXJlbGVhc2UzLjAtZGVudGFsY2FkYXBwLjd6"
+        },
+        {
+            "Name": "exoImplantEditor 2024 01 11 generic release3.1 dentalcadapp.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b0ltcGxhbnRFZGl0b3ItMjAyNC0wMS0xMS1nZW5lcmljLXJlbGVhc2UzLjEtZGVudGFsY2FkYXBwLjd6"
+        },
+        {
+            "Name": "Instruction Manual Creating Implant Libraries using exoImplantEditor en.pdf",
+            "Url": "aHR0cHM6Ly9jdXN0b21lci5leG9jYWQuY29tL2V4b2NhZF9JbnN0cnVjdGlvbl9NYW51YWxfQ3JlYXRpbmdfSW1wbGFudF9MaWJyYXJpZXNfdXNpbmdfZXhvSW1wbGFudEVkaXRvci1lbi5wZGY="
+        }
+    ],
+    "ToothModelEditor": [
+        {
+            "Name": "delivery exocad ToothModelEditor 64bit 2017 04 10.7z",
+            "Url": "aHR0cHM6Ly9kb3dubG9hZC5leG9jYWQuY29tL2RlbGl2ZXJ5L2V4b2NhZC1Ub290aE1vZGVsRWRpdG9yLTY0Yml0LTIwMTctMDQtMTAuN3o="
+        },
+        {
+            "Name": "exocad guide ToothLibraryModelEditor.pdf",
+            "Url": "aHR0cHM6Ly9jdXN0b21lci5leG9jYWQuY29tL2V4b2NhZC1ndWlkZS1Ub290aExpYnJhcnlNb2RlbEVkaXRvci5wZGY="
+        }
+    ],
+    "addon": [
+        {
+            "Name": "v3 exocam demo base v7.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1kZW1vLWJhc2Utdjcuemlw"
+        },
+        {
+            "Name": "v3 exocam generic base v7.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1nZW5lcmljLWJhc2Utdjcuemlw"
+        },
+        {
+            "Name": "v3 exocam mdw bin64 v7.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctYmluNjQtdjcuemlw"
+        },
+        {
+            "Name": "v3 exocam mdw config v7.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctY29uZmlnLXY3LnppcA=="
+        },
+        {
+            "Name": "v3 exocam mdw machines v7.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctbWFjaGluZXMtdjcuemlw"
+        },
+        {
+            "Name": "v3 exocam demo base v8.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1kZW1vLWJhc2Utdjguemlw"
+        },
+        {
+            "Name": "v3 exocam generic base v8.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1nZW5lcmljLWJhc2Utdjguemlw"
+        },
+        {
+            "Name": "v3 exocam mdw bin64 v8.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctYmluNjQtdjguemlw"
+        },
+        {
+            "Name": "v3 exocam mdw config v8.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctY29uZmlnLXY4LnppcA=="
+        },
+        {
+            "Name": "v3 exocam mdw machines v8.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctbWFjaGluZXMtdjguemlw"
+        },
+        {
+            "Name": "v3 exocam demo base v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1kZW1vLWJhc2Utdjkuemlw"
+        },
+        {
+            "Name": "v3 exocam generic base v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1nZW5lcmljLWJhc2Utdjkuemlw"
+        },
+        {
+            "Name": "v3 exocam mdw bin64 v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctYmluNjQtdjkuemlw"
+        },
+        {
+            "Name": "v3 exocam mdw config v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctY29uZmlnLXY5LnppcA=="
+        },
+        {
+            "Name": "v3 exocam mdw machines v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3YzL2V4b2NhbS1tZHctbWFjaGluZXMtdjkuemlw"
+        },
+        {
+            "Name": "v4 exocam demo base v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3Y0L2V4b2NhbS1kZW1vLWJhc2Utdjkuemlw"
+        },
+        {
+            "Name": "v4 exocam generic base v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3Y0L2V4b2NhbS1nZW5lcmljLWJhc2Utdjkuemlw"
+        },
+        {
+            "Name": "v4 exocam mdw bin64 v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3Y0L2V4b2NhbS1tZHctYmluNjQtdjkuemlw"
+        },
+        {
+            "Name": "v4 exocam mdw config v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3Y0L2V4b2NhbS1tZHctY29uZmlnLXY5LnppcA=="
+        },
+        {
+            "Name": "v4 exocam mdw machines v9.zip",
+            "Url": "aHR0cDovL2FkZG9ucy5leG9jYWQuY29tL3Y0L2V4b2NhbS1tZHctbWFjaGluZXMtdjkuemlw"
+        }
+    ]
+}
