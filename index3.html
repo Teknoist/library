@@ -327,9 +327,10 @@ function renderSoftware() {
     grid.className = 'soft-grid';
 
     filtered.forEach(item => {
-      const url = atob(item.Url);
+      const url = item._decodedUrl || '';
       const displayName = cleanSoftName(item.Name);
       const dateStr = getDateFromName(item.Name);
+      const safeUrl = url.replace(/'/g,"\\'");
       const c = document.createElement('div');
       c.className = 'soft-card';
       c.innerHTML = `
@@ -338,8 +339,9 @@ function renderSoftware() {
         </div>
         <div class="soft-info">
           <div class="soft-name" title="${item.Name}">${displayName}</div>
-          <div class="soft-sub">${dateStr || item.Name.split(' ').pop()}</div>
+          <div class="soft-sub">${dateStr || ''}</div>
         </div>
+        <button class="btn-sm" style="margin-right:4px" title="Copy link" onclick="copyText('${safeUrl}')">📋</button>
         <a class="soft-dl" href="${url}" target="_blank" rel="noopener" title="Download">⬇</a>`;
       grid.appendChild(c);
     });
@@ -431,10 +433,29 @@ async function loadFiles() {
   }
 }
 
+function decodeB64Url(b64) {
+  try {
+    const s = b64.replace(/-/g,'+').replace(/_/g,'/');
+    const padded = s + '==='.slice((s.length + 3) % 4);
+    return decodeURIComponent(escape(atob(padded)));
+  } catch(e) {
+    try { return atob(b64); } catch(e2) { return ''; }
+  }
+}
+
 async function loadHex() {
   try {
     const r = await fetch(HEX_URL + '?v=' + Date.now());
-    hexData = await r.json();
+    const raw = await r.json();
+    // Pre-decode all Base64 URLs into _decodedUrl
+    Object.keys(raw).forEach(cat => {
+      if (Array.isArray(raw[cat])) {
+        raw[cat].forEach(item => {
+          item._decodedUrl = decodeB64Url(item.Url);
+        });
+      }
+    });
+    hexData = raw;
   } catch(e) {
     document.getElementById('softWrap').innerHTML = '<div class="empty"><p>Could not load hex.json</p></div>';
   }
