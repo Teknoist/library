@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Exocad Library Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#0f0f12;--bg2:#17171c;--bg3:#1e1e26;--card:#1e1e26;--card-hover:#25252f;
+  --border:rgba(255,255,255,0.07);--border-hover:rgba(255,255,255,0.14);
+  --accent:#7c6bf0;--accent2:#a78fff;
+  --text:#e8e8f0;--text2:#9090a8;--text3:#5a5a72;
+  --danger:#f06060;--radius:12px;--radius-sm:8px;--trans:0.18s ease;
+}
+[data-theme="light"]{
+  --bg:#f4f4f8;--bg2:#ffffff;--bg3:#ebebf2;--card:#ffffff;--card-hover:#f0f0f8;
+  --border:rgba(0,0,0,0.08);--border-hover:rgba(0,0,0,0.15);
+  --text:#1a1a2e;--text2:#5a5a72;--text3:#9090a8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+a{text-decoration:none;color:inherit}
+
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.25rem;position:sticky;top:0;z-index:100}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;height:58px}
+.logo{font-size:17px;font-weight:600;color:var(--accent2);white-space:nowrap;flex-shrink:0}
+.logo span{color:var(--text2);font-weight:400}
+.search-wrap{flex:1;position:relative;min-width:0}
+.search-wrap input{
+  width:100%;height:38px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);font-size:14px;
+  padding:0 34px 0 36px;outline:none;transition:border-color var(--trans);font-family:inherit;
+}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap input::placeholder{color:var(--text3)}
+.s-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+.s-clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;display:none;padding:2px 4px}
+.s-clr.show{display:block}
+.btn-icon{background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all var(--trans);flex-shrink:0}
+.btn-icon:hover{background:var(--card-hover);color:var(--text)}
+
+.tabs-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.25rem;position:sticky;top:58px;z-index:99}
+.tabs-inner{max-width:960px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs-inner::-webkit-scrollbar{display:none}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all var(--trans);user-select:none;flex-shrink:0}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
+.tab-badge{background:var(--bg3);color:var(--text3);font-size:11px;padding:1px 6px;border-radius:10px;margin-left:5px}
+.tab.active .tab-badge{background:rgba(124,107,240,0.2);color:var(--accent2)}
+
+.filter-bar{max-width:960px;margin:0 auto;padding:14px 1.25rem 0}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{padding:5px 12px;font-size:12px;font-weight:500;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all var(--trans);white-space:nowrap}
+.chip:hover{border-color:var(--border-hover);color:var(--text)}
+.chip.active{background:rgba(124,107,240,0.15);border-color:var(--accent);color:var(--accent2)}
+.sort-sel{margin-left:auto;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);padding:5px 10px;font-size:12px;cursor:pointer;outline:none;font-family:inherit}
+
+.info-bar{max-width:960px;margin:0 auto;padding:10px 1.25rem 0;font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px}
+.info-bar b{color:var(--text2)}
+
+.grid-wrap{max-width:960px;margin:0 auto;padding:12px 1.25rem 2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:8px;transition:all var(--trans)}
+.card:hover{background:var(--card-hover);border-color:var(--border-hover)}
+.card-top{display:flex;align-items:flex-start;gap:8px}
+.card-ico{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(62,207,142,0.1);color:#3ecf8e}
+.card-name{font-size:13px;font-weight:500;line-height:1.4;color:var(--text);word-break:break-word;flex:1;padding-top:2px}
+.card-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;background:rgba(62,207,142,0.1);color:#3ecf8e}
+.card-actions{display:flex;gap:6px;align-items:center;margin-top:2px}
+.btn-dl{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(124,107,240,0.12);border:1px solid rgba(124,107,240,0.25);color:var(--accent2);border-radius:var(--radius-sm);padding:7px 10px;font-size:12px;font-weight:500;cursor:pointer;transition:all var(--trans);font-family:inherit}
+.btn-dl:hover{background:rgba(124,107,240,0.22);border-color:var(--accent)}
+.btn-dl:disabled{opacity:0.35;cursor:not-allowed}
+.btn-sm{width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--trans);font-size:14px;flex-shrink:0}
+.btn-sm:hover{background:var(--card-hover);color:var(--text)}
+.btn-fav.on{color:#f06060;border-color:rgba(240,96,96,0.3);background:rgba(240,96,96,0.08)}
+
+.empty{grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--text3)}
+.empty-ico{font-size:36px;margin-bottom:12px;opacity:0.4}
+.empty p{font-size:14px}
+
+/* SOFTWARE TAB */
+.soft-wrap{max-width:960px;margin:0 auto;padding:16px 1.25rem 2rem}
+.soft-group{margin-bottom:1.75rem}
+.soft-group-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:var(--text3);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.soft-group-title span{font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3)}
+.soft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.soft-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;display:flex;align-items:center;gap:10px;transition:all var(--trans)}
+.soft-card:hover{background:var(--card-hover);border-color:var(--border-hover)}
+.soft-type{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.soft-info{flex:1;min-width:0}
+.soft-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.soft-sub{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.soft-dl{width:28px;height:28px;border-radius:var(--radius-sm);background:rgba(124,107,240,0.1);border:1px solid rgba(124,107,240,0.2);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all var(--trans);flex-shrink:0;text-decoration:none}
+.soft-dl:hover{background:rgba(124,107,240,0.22)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;font-size:13px;color:var(--text);transition:transform 0.25s ease,opacity 0.25s ease;opacity:0;z-index:999;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.scroll-top{position:fixed;bottom:24px;right:24px;width:38px;height:38px;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:16px;transition:all var(--trans);opacity:0;pointer-events:none;z-index:50}
+.scroll-top.show{opacity:1;pointer-events:all}
+.scroll-top:hover{background:var(--card-hover);color:var(--text)}
+
+@media(max-width:600px){
+  .logo span{display:none}
+  .tab{padding:9px 10px;font-size:12px}
+  .grid{grid-template-columns:1fr 1fr}
+  .soft-grid{grid-template-columns:1fr}
+}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">Exocad <span>Library Hub</span></div>
+    <div class="search-wrap">
+      <span class="s-ico">🔍</span>
+      <input id="searchInput" placeholder="Search libraries… (press / to focus)" autocomplete="off" spellcheck="false"/>
+      <button class="s-clr" id="sClear">×</button>
+    </div>
+    <button class="btn-icon" id="themeBtn" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="tabs-inner">
+    <div class="tab active" data-tab="libs">Libraries <span class="tab-badge" id="badge-libs">0</span></div>
+    <div class="tab" data-tab="software">Exocad Software <span class="tab-badge" id="badge-soft">0</span></div>
+    <div class="tab" data-tab="favs">⭐ Favorites <span class="tab-badge" id="badge-favs">0</span></div>
+  </div>
+</div>
+
+<!-- LIBRARIES TAB -->
+<div id="tabLibs">
+  <div class="filter-bar">
+    <div class="filter-row">
+      <select class="sort-sel" id="sortSel">
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+      </select>
+    </div>
+  </div>
+  <div class="info-bar" id="libsInfo"></div>
+  <div class="grid-wrap"><div class="grid" id="libsGrid"></div></div>
+</div>
+
+<!-- SOFTWARE TAB -->
+<div id="tabSoftware" style="display:none">
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="chip soft-chip active" data-scat="all">All</div>
+      <div class="chip soft-chip" data-scat="dentalcad">🦷 DentalCAD</div>
+      <div class="chip soft-chip" data-scat="exoplan">🔬 exoplan</div>
+      <div class="chip soft-chip" data-scat="chairside">🪑 ChairsideCAD</div>
+      <div class="chip soft-chip" data-scat="partialcad">🧩 PartialCAD</div>
+      <div class="chip soft-chip" data-scat="framework">⚙️ Framework</div>
+      <div class="chip soft-chip" data-scat="implant_editor">🔩 Implant Editor</div>
+      <div class="chip soft-chip" data-scat="ToothModelEditor">🦷 Tooth Editor</div>
+      <div class="chip soft-chip" data-scat="addon">🔌 exoCAM Addon</div>
+    </div>
+  </div>
+  <div class="info-bar" id="softInfo"></div>
+  <div class="soft-wrap" id="softWrap"></div>
+</div>
+
+<!-- FAVORITES TAB -->
+<div id="tabFavs" style="display:none">
+  <div class="info-bar" id="favsInfo"></div>
+  <div class="grid-wrap"><div class="grid" id="favsGrid"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<button class="scroll-top" id="scrollTop">↑</button>
+
+<script>
+const FILES_URL = 'files.json';
+const HEX_URL = 'hex.json';
+
+let allFiles = [];
+let hexData = {};
+let favorites = JSON.parse(localStorage.getItem('exo_favs') || '[]');
+let currentSCat = 'all';
+let currentSort = 'az';
+let currentTab = 'libs';
+let lightMode = localStorage.getItem('exo_theme') === 'light';
+
+if (lightMode) document.documentElement.setAttribute('data-theme', 'light');
+document.getElementById('themeBtn').textContent = lightMode ? '☀️' : '🌙';
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => toast('✓ Link copied'));
+}
+
+function toggleFav(name) {
+  const i = favorites.indexOf(name);
+  if (i === -1) { favorites.push(name); toast('⭐ Added to favorites'); }
+  else { favorites.splice(i, 1); toast('Removed from favorites'); }
+  localStorage.setItem('exo_favs', JSON.stringify(favorites));
+  updateBadges();
+  if (currentTab === 'libs') renderLibs();
+  if (currentTab === 'favs') renderFavs();
+}
+
+function getCategory(file) {
+  const n = (file.name || '').toLowerCase();
+  if (n.includes(' lib') || n.endsWith('lib') || n.endsWith('_lib')) return 'lib';
+  return 'addon';
+}
+
+function norm(text) {
+  if (!text) return '';
+  const m = {'İ':'i','I':'i','ı':'i','Ş':'s','ş':'s','Ğ':'g','ğ':'g','Ü':'u','ü':'u','Ö':'o','ö':'o','Ç':'c','ç':'c'};
+  return text.replace(/[İIıŞşĞğÜüÖöÇç]/g, c => m[c]||c).toLowerCase();
+}
+
+function makeCard(file) {
+  const cat = getCategory(file);
+  const isFav = favorites.includes(file.name);
+  const hasUrl = file.download_url && file.download_url.length > 30;
+  const safeUrl = (file.download_url || '').replace(/'/g, "\\'");
+  const safeName = file.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  const d = document.createElement('div');
+  d.className = 'card';
+  d.innerHTML = `
+    <div class="card-top">
+      <div class="card-ico">${cat === 'lib' ? '📦' : '🔧'}</div>
+      <div class="card-name">${file.name}</div>
+    </div>
+    <span class="card-tag">Library</span>
+    <div class="card-actions">
+      <button class="btn-dl" ${hasUrl ? '' : 'disabled'} onclick="window.open('${safeUrl}','_blank')">⬇ Download</button>
+      <button class="btn-sm" title="Copy link" onclick="copyText('${safeUrl}')">📋</button>
+      <button class="btn-sm btn-fav ${isFav ? 'on' : ''}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}" onclick="toggleFav('${safeName}')">${isFav ? '⭐' : '☆'}</button>
+    </div>`;
+  return d;
+}
+
+function getFilteredLibs() {
+  const q = norm(document.getElementById('searchInput').value);
+  let res = allFiles.filter(f => !q || q === '*' || norm(f.name).includes(q));
+  res.sort((a,b) => currentSort === 'za' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name));
+  return res;
+}
+
+function renderLibs() {
+  const grid = document.getElementById('libsGrid');
+  grid.innerHTML = '';
+  const res = getFilteredLibs();
+  document.getElementById('libsInfo').innerHTML = `<b>${res.length}</b> results / <b>${allFiles.length}</b> total`;
+  if (!res.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-ico">🔍</div><p>No results found</p></div>';
+    return;
+  }
+  const f = document.createDocumentFragment();
+  res.forEach(file => f.appendChild(makeCard(file)));
+  grid.appendChild(f);
+}
+
+function renderFavs() {
+  const grid = document.getElementById('favsGrid');
+  grid.innerHTML = '';
+  const q = norm(document.getElementById('searchInput').value);
+  const res = allFiles.filter(f => favorites.includes(f.name) && (!q || q === '*' || norm(f.name).includes(q)));
+  document.getElementById('favsInfo').innerHTML = `<b>${res.length}</b> favorite${res.length !== 1 ? 's' : ''}`;
+  if (!res.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-ico">⭐</div><p>No favorites yet — click ☆ on any library</p></div>';
+    return;
+  }
+  const f = document.createDocumentFragment();
+  res.forEach(file => f.appendChild(makeCard(file)));
+  grid.appendChild(f);
+}
+
+/* ---- SOFTWARE TAB ---- */
+const SOFT_META = {
+  dentalcad:      { label: 'DentalCAD',          icon: '🦷', color: 'rgba(62,207,142,0.1)',  textColor: '#3ecf8e' },
+  exoplan:        { label: 'exoplan',             icon: '🔬', color: 'rgba(124,107,240,0.1)', textColor: '#a78fff' },
+  chairside:      { label: 'ChairsideCAD',        icon: '🪑', color: 'rgba(96,180,240,0.1)',  textColor: '#60b4f0' },
+  partialcad:     { label: 'PartialCAD',          icon: '🧩', color: 'rgba(240,160,80,0.1)',  textColor: '#f0a050' },
+  framework:      { label: 'Framework',           icon: '⚙️',  color: 'rgba(160,160,180,0.1)', textColor: '#9090a8' },
+  implant_editor: { label: 'Implant Editor',      icon: '🔩', color: 'rgba(240,96,96,0.1)',   textColor: '#f06060' },
+  ToothModelEditor:{ label: 'Tooth Model Editor', icon: '🦷', color: 'rgba(240,200,80,0.1)',  textColor: '#f0c850' },
+  addon:          { label: 'exoCAM Addon',        icon: '🔌', color: 'rgba(62,180,207,0.1)',  textColor: '#3eb4cf' },
+};
+
+function cleanSoftName(name) {
+  return name.replace(/\.7z|\.zip|\.exe/gi, '').replace(/_/g,' ').trim();
+}
+
+function getDateFromName(name) {
+  const m = name.match(/(\d{4})[.\s-](\d{2})[.\s-](\d{2})/);
+  return m ? `${m[1]}-${m[2]}-${m[3]}` : '';
+}
+
+function renderSoftware() {
+  const wrap = document.getElementById('softWrap');
+  wrap.innerHTML = '';
+  const order = ['dentalcad','exoplan','chairside','partialcad','framework','implant_editor','ToothModelEditor','addon'];
+  let total = 0;
+  let shown = 0;
+
+  order.forEach(key => {
+    const items = hexData[key];
+    if (!items || !items.length) return;
+    total += items.length;
+    if (currentSCat !== 'all' && currentSCat !== key) return;
+
+    const meta = SOFT_META[key] || { label: key, icon: '📦', color: 'rgba(124,107,240,0.1)', textColor: '#a78fff' };
+    const q = norm(document.getElementById('searchInput').value);
+    const filtered = items.filter(it => !q || q === '*' || norm(it.Name).includes(q));
+    if (!filtered.length) return;
+    shown += filtered.length;
+
+    const sec = document.createElement('div');
+    sec.className = 'soft-group';
+    const grid = document.createElement('div');
+    grid.className = 'soft-grid';
+
+    filtered.forEach(item => {
+      const url = atob(item.Url);
+      const displayName = cleanSoftName(item.Name);
+      const dateStr = getDateFromName(item.Name);
+      const c = document.createElement('div');
+      c.className = 'soft-card';
+      c.innerHTML = `
+        <div class="soft-type" style="background:${meta.color}">
+          <span style="font-size:15px">${meta.icon}</span>
+        </div>
+        <div class="soft-info">
+          <div class="soft-name" title="${item.Name}">${displayName}</div>
+          <div class="soft-sub">${dateStr || item.Name.split(' ').pop()}</div>
+        </div>
+        <a class="soft-dl" href="${url}" target="_blank" rel="noopener" title="Download">⬇</a>`;
+      grid.appendChild(c);
+    });
+
+    sec.innerHTML = `<div class="soft-group-title">
+      <span style="font-size:16px">${meta.icon}</span> ${meta.label}
+      <span>(${filtered.length})</span>
+    </div>`;
+    sec.appendChild(grid);
+    wrap.appendChild(sec);
+  });
+
+  document.getElementById('softInfo').innerHTML = `<b>${shown}</b> results / <b>${total}</b> total`;
+  document.getElementById('badge-soft').textContent = total;
+
+  if (!shown) {
+    wrap.innerHTML = '<div class="empty"><div class="empty-ico">🔍</div><p>No results found</p></div>';
+  }
+}
+
+function updateBadges() {
+  document.getElementById('badge-libs').textContent = allFiles.length;
+  document.getElementById('badge-favs').textContent = favorites.length;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('tabLibs').style.display = tab === 'libs' ? '' : 'none';
+  document.getElementById('tabSoftware').style.display = tab === 'software' ? '' : 'none';
+  document.getElementById('tabFavs').style.display = tab === 'favs' ? '' : 'none';
+  if (tab === 'favs') renderFavs();
+  if (tab === 'software') renderSoftware();
+}
+
+/* Events */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+
+document.querySelectorAll('.soft-chip[data-scat]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.soft-chip[data-scat]').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentSCat = chip.dataset.scat;
+    renderSoftware();
+  });
+});
+
+const si = document.getElementById('searchInput');
+const sc = document.getElementById('sClear');
+si.addEventListener('input', () => {
+  sc.classList.toggle('show', si.value.length > 0);
+  if (currentTab === 'libs') renderLibs();
+  else if (currentTab === 'software') renderSoftware();
+  else if (currentTab === 'favs') renderFavs();
+});
+sc.addEventListener('click', () => {
+  si.value = ''; sc.classList.remove('show');
+  renderLibs(); si.focus();
+});
+
+document.getElementById('sortSel').addEventListener('change', e => {
+  currentSort = e.target.value; renderLibs();
+});
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  lightMode = !lightMode;
+  document.documentElement.setAttribute('data-theme', lightMode ? 'light' : '');
+  document.getElementById('themeBtn').textContent = lightMode ? '☀️' : '🌙';
+  localStorage.setItem('exo_theme', lightMode ? 'light' : 'dark');
+});
+
+window.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== si) { e.preventDefault(); si.focus(); si.select(); }
+  if (e.key === 'Escape') { si.value = ''; sc.classList.remove('show'); renderLibs(); si.blur(); }
+});
+
+const scrollBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => scrollBtn.classList.toggle('show', scrollY > 400), {passive:true});
+scrollBtn.addEventListener('click', () => scrollTo({top:0,behavior:'smooth'}));
+
+async function loadFiles() {
+  try {
+    const r = await fetch(FILES_URL + '?v=' + Date.now());
+    allFiles = await r.json();
+    updateBadges();
+    renderLibs();
+  } catch(e) {
+    document.getElementById('libsGrid').innerHTML = '<div class="empty"><div class="empty-ico">⚠️</div><p>Could not load files.json</p></div>';
+  }
+}
+
+async function loadHex() {
+  try {
+    const r = await fetch(HEX_URL + '?v=' + Date.now());
+    hexData = await r.json();
+  } catch(e) {
+    document.getElementById('softWrap').innerHTML = '<div class="empty"><p>Could not load hex.json</p></div>';
+  }
+}
+
+loadFiles();
+loadHex();
+</script>
+</body>
+</html>
