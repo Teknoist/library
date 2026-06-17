@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Exocad Library Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── VARIABLES ── */
+:root {
+  --bg:#09090f;
+  --glass-bg:rgba(255,255,255,0.04);
+  --glass-bg-hover:rgba(255,255,255,0.07);
+  --glass-border:rgba(255,255,255,0.08);
+  --glass-border-hover:rgba(255,255,255,0.16);
+  --header-bg:rgba(9,9,15,0.75);
+  --accent:#7c6bf0;--accent2:#b8acff;--accent-glow:rgba(124,107,240,0.2);
+  --text:#f0f0fa;--text2:#8888b0;--text3:#44445a;
+  --green:#3ecf8e;--orange:#f0a050;--blue:#60b4f0;--red:#f06060;--yellow:#f0d050;--teal:#3eb4cf;
+  --radius:16px;--radius-sm:10px;--radius-xs:7px;--trans:0.18s ease;
+  --blur:blur(18px) saturate(180%);
+}
+[data-theme="light"]{
+  --bg:#eeeef8;
+  --glass-bg:rgba(255,255,255,0.55);
+  --glass-bg-hover:rgba(255,255,255,0.75);
+  --glass-border:rgba(255,255,255,0.9);
+  --glass-border-hover:rgba(124,107,240,0.4);
+  --header-bg:rgba(238,238,248,0.8);
+  --text:#14142a;--text2:#55558a;--text3:#9999bc;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:rgba(124,107,240,0.3);border-radius:3px}
+
+/* ── ANIMATED BG MESH ── */
+.mesh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.18;animation:drift 20s ease-in-out infinite alternate}
+.blob1{width:600px;height:600px;background:radial-gradient(circle,#7c6bf0,transparent);top:-100px;left:-100px;animation-duration:22s}
+.blob2{width:500px;height:500px;background:radial-gradient(circle,#3eb4cf,transparent);bottom:-80px;right:-80px;animation-duration:18s;animation-delay:-5s}
+.blob3{width:400px;height:400px;background:radial-gradient(circle,#3ecf8e,transparent);top:40%;left:40%;animation-duration:25s;animation-delay:-10s}
+[data-theme="light"] .blob{opacity:0.10}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.1)}100%{transform:translate(-20px,40px) scale(0.95)}}
+
+/* Everything above mesh */
+header,#statsBar,.tabs-bar,.page{position:relative;z-index:1}
+
+/* ── HEADER ── */
+header{
+  background:var(--header-bg);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border-bottom:1px solid var(--glass-border);
+  padding:0 1.5rem;position:sticky;top:0;z-index:100;
+}
+.hdr{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:12px;height:62px}
+.logo{font-size:16px;font-weight:700;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:8px;letter-spacing:-0.01em}
+.logo-pill{background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* ── SEARCH ── */
+.sw{flex:1;position:relative;min-width:0}
+.sw input{
+  width:100%;height:40px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);color:var(--text);font-size:13.5px;
+  padding:0 90px 0 40px;outline:none;font-family:inherit;
+  transition:border-color var(--trans),box-shadow var(--trans),background var(--trans);
+  backdrop-filter:blur(8px);
+}
+.sw input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);background:rgba(255,255,255,0.09)}
+.sw input::placeholder{color:var(--text3)}
+.sw-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+.sw-kbd{position:absolute;right:36px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.07);border:1px solid var(--glass-border);border-radius:4px;font-size:10px;padding:1px 6px;color:var(--text3);pointer-events:none}
+.sw-clr{position:absolute;right:9px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:17px;line-height:1;display:none;padding:3px;transition:color var(--trans)}
+.sw-clr.show{display:block}.sw-clr.show~.sw-kbd{display:none}
+.sw-clr:hover{color:var(--text)}
+
+/* fuzzy indicator */
+.fuzzy-pill{
+  position:absolute;right:9px;bottom:-22px;
+  font-size:10.5px;color:var(--accent2);background:rgba(124,107,240,0.12);
+  border:1px solid rgba(124,107,240,0.2);border-radius:10px;padding:1px 8px;
+  display:none;white-space:nowrap;
+}
+.fuzzy-pill.show{display:block}
+
+.hbtn{
+  background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);
+  color:var(--text2);border-radius:var(--radius-sm);width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:15px;transition:all var(--trans);flex-shrink:0;backdrop-filter:blur(8px);
+}
+.hbtn:hover{background:rgba(255,255,255,0.12);color:var(--text);border-color:var(--glass-border-hover)}
+
+/* lang dropdown */
+.lang-wrap{position:relative;flex-shrink:0}
+.lang-btn{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);
+  color:var(--text2);border-radius:var(--radius-sm);height:38px;padding:0 10px;
+  cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;
+  transition:all var(--trans);backdrop-filter:blur(8px);white-space:nowrap;
+}
+.lang-btn:hover{background:rgba(255,255,255,0.12);color:var(--text)}
+.lang-dropdown{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:rgba(20,20,32,0.95);backdrop-filter:var(--blur);
+  border:1px solid var(--glass-border);border-radius:var(--radius-sm);
+  overflow:hidden;min-width:120px;display:none;box-shadow:0 16px 40px rgba(0,0,0,0.4);z-index:200;
+}
+[data-theme="light"] .lang-dropdown{background:rgba(240,240,252,0.95)}
+.lang-dropdown.open{display:block}
+.lang-opt{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text2);transition:all var(--trans);display:flex;align-items:center;gap:8px}
+.lang-opt:hover{background:rgba(124,107,240,0.12);color:var(--text)}
+.lang-opt.active{color:var(--accent2);background:rgba(124,107,240,0.1)}
+
+/* ── STATS BAR ── */
+#statsBar{
+  background:rgba(255,255,255,0.025);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--glass-border);
+  padding:0 1.5rem;
+}
+.sbar-inner{max-width:1040px;margin:0 auto;display:flex;gap:24px;padding:7px 0;overflow-x:auto;scrollbar-width:none}
+.sbar-inner::-webkit-scrollbar{display:none}
+.sitem{display:flex;align-items:center;gap:7px;white-space:nowrap;flex-shrink:0}
+.sdot{width:6px;height:6px;border-radius:50%}
+.slabel{font-size:11.5px;color:var(--text3)}
+.sval{font-size:12px;font-weight:700;color:var(--text2)}
+
+/* ── TABS ── */
+.tabs-bar{
+  background:var(--header-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border-bottom:1px solid var(--glass-border);
+  padding:0 1.5rem;position:sticky;top:62px;z-index:99;
+}
+.tabs{max-width:1040px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:11px 18px;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all var(--trans);user-select:none;flex-shrink:0;display:flex;align-items:center;gap:7px}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
+.tbadge{background:rgba(255,255,255,0.06);color:var(--text3);font-size:10.5px;padding:1px 6px;border-radius:10px;font-weight:600}
+.tab.active .tbadge{background:rgba(124,107,240,0.2);color:var(--accent2)}
+
+/* ── PAGE WRAPPER ── */
+.page{max-width:1040px;margin:0 auto;padding:0 1.5rem}
+
+/* ── TOOLBAR ── */
+.toolbar{padding:14px 0 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{padding:5px 13px;font-size:12px;font-weight:500;border-radius:20px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.04);color:var(--text3);cursor:pointer;transition:all var(--trans);white-space:nowrap;user-select:none;backdrop-filter:blur(4px)}
+.chip:hover{border-color:var(--glass-border-hover);color:var(--text2)}
+.chip.active{background:rgba(124,107,240,0.15);border-color:rgba(124,107,240,0.4);color:var(--accent2)}
+.sortsel{margin-left:auto;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--text2);border-radius:var(--radius-sm);padding:5px 10px;font-size:12px;cursor:pointer;outline:none;font-family:inherit;backdrop-filter:blur(4px)}
+
+/* ── INFO ROW ── */
+.inforow{padding:10px 0 0;font-size:12px;color:var(--text3)}
+.inforow b{color:var(--text2)}
+mark{background:rgba(183,172,255,0.25);color:var(--accent2);border-radius:3px;padding:0 1px}
+[data-theme="light"] mark{background:rgba(124,107,240,0.2);color:var(--accent)}
+
+/* ── GRID ── */
+.gwrap{padding:12px 0 3rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:10px}
+
+/* ── CARD (GLASSMORPHISM) ── */
+.card{
+  background:var(--glass-bg);
+  backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:14px;display:flex;flex-direction:column;gap:9px;
+  transition:all var(--trans);position:relative;overflow:hidden;
+  will-change:transform;
+}
+.card::after{
+  content:'';position:absolute;inset:0;opacity:0;
+  background:linear-gradient(135deg,rgba(124,107,240,0.08) 0%,transparent 60%);
+  transition:opacity var(--trans);pointer-events:none;border-radius:inherit;
+}
+.card:hover{
+  background:var(--glass-bg-hover);border-color:var(--glass-border-hover);
+  transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.3),0 0 0 1px rgba(124,107,240,0.1);
+}
+.card:hover::after{opacity:1}
+.card-top{display:flex;align-items:flex-start;gap:9px}
+.card-ico{width:34px;height:34px;border-radius:var(--radius-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(62,207,142,0.12);margin-top:1px}
+.card-name{font-size:13px;font-weight:500;line-height:1.45;color:var(--text);word-break:break-word;overflow-wrap:break-word;flex:1}
+.card-actions{display:flex;gap:6px;align-items:center}
+.btn-dl{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  background:rgba(124,107,240,0.1);border:1px solid rgba(124,107,240,0.2);
+  color:var(--accent2);border-radius:var(--radius-sm);padding:7px 10px;
+  font-size:12px;font-weight:500;cursor:pointer;transition:all var(--trans);font-family:inherit;
+  backdrop-filter:blur(4px);
+}
+.btn-dl:hover{background:rgba(124,107,240,0.22);border-color:var(--accent)}
+.btn-dl:disabled{opacity:0.25;cursor:not-allowed}
+.bsm{
+  width:31px;height:31px;border-radius:var(--radius-sm);border:1px solid var(--glass-border);
+  background:rgba(255,255,255,0.05);color:var(--text3);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all var(--trans);font-size:13px;flex-shrink:0;backdrop-filter:blur(4px);
+}
+.bsm:hover{background:rgba(255,255,255,0.1);color:var(--text);border-color:var(--glass-border-hover)}
+.bsm.fav-on{color:var(--red);border-color:rgba(240,96,96,0.35);background:rgba(240,96,96,0.1)}
+
+/* sentinel for infinite scroll */
+#sentinel{height:1px;width:100%}
+
+/* ── EMPTY ── */
+.empty{grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--text3)}
+.empty-ico{font-size:42px;margin-bottom:14px;opacity:0.3;display:block}
+.empty h3{font-size:16px;color:var(--text2);font-weight:500;margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* ── SOFTWARE CARDS ── */
+.swrap{padding:16px 0 3rem}
+.sgroup{margin-bottom:2rem}
+.sgtitle{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;gap:8px}
+.sgcount{font-weight:400;text-transform:none;letter-spacing:0;font-size:11px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:8px}
+.scard{
+  background:var(--glass-bg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:12px 13px;display:flex;align-items:flex-start;gap:10px;transition:all var(--trans);
+}
+.scard:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-hover);transform:translateY(-1px)}
+.sico{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px}
+.sinfo{flex:1;min-width:0}
+.sname{font-size:12.5px;font-weight:500;color:var(--text);word-break:break-word;overflow-wrap:break-word;line-height:1.4}
+.ssub{font-size:11px;color:var(--text3);margin-top:3px}
+.sacts{display:flex;gap:5px;flex-shrink:0;margin-top:1px}
+.sdl{width:28px;height:28px;border-radius:var(--radius-xs);background:rgba(124,107,240,0.1);border:1px solid rgba(124,107,240,0.2);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all var(--trans);text-decoration:none}
+.sdl:hover{background:rgba(124,107,240,0.25);border-color:var(--accent)}
+.scopy{width:28px;height:28px;border-radius:var(--radius-xs);background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--text3);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all var(--trans)}
+.scopy:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+
+/* ── STATS TAB ── */
+.stats-page{padding:16px 0 3rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:2rem}
+.stat-card{
+  background:var(--glass-bg);backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:18px 20px;
+}
+.stat-card-val{font-size:32px;font-weight:700;color:var(--text);line-height:1}
+.stat-card-label{font-size:12px;color:var(--text3);margin-top:6px}
+.stat-card-sub{font-size:11px;color:var(--accent2);margin-top:3px}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--glass-border)}
+.bar-list{display:flex;flex-direction:column;gap:8px;margin-bottom:2rem}
+.bar-item{display:flex;align-items:center;gap:10px}
+.bar-name{font-size:12.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:160px;flex-shrink:0}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--teal));transition:width 0.8s cubic-bezier(.16,1,.3,1)}
+.bar-count{font-size:11.5px;font-weight:600;color:var(--text2);min-width:28px;text-align:right;flex-shrink:0}
+.cat-bars{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:2rem}
+.cat-bar-card{background:var(--glass-bg);backdrop-filter:blur(8px);border:1px solid var(--glass-border);border-radius:var(--radius-sm);padding:14px}
+.cat-bar-name{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cat-bar-prog{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.cat-bar-fill{height:100%;border-radius:2px;transition:width 0.8s cubic-bezier(.16,1,.3,1)}
+.cat-bar-nums{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--text3)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:rgba(18,18,28,0.92);backdrop-filter:var(--blur);
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:10px 20px;font-size:13px;color:var(--text);
+  box-shadow:0 16px 48px rgba(0,0,0,0.45);
+  transition:transform .22s ease,opacity .22s ease;opacity:0;z-index:9999;
+  white-space:nowrap;pointer-events:none;display:flex;align-items:center;gap:8px;
+}
+[data-theme="light"] .toast{background:rgba(240,240,252,0.95)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── SCROLL TOP ── */
+.stbtn{position:fixed;bottom:28px;right:24px;width:40px;height:40px;background:rgba(18,18,28,0.8);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:16px;transition:all var(--trans);box-shadow:0 8px 32px rgba(0,0,0,0.3);opacity:0;pointer-events:none;z-index:50}
+.stbtn.show{opacity:1;pointer-events:all}
+.stbtn:hover{color:var(--text);border-color:var(--accent)}
+
+/* skeleton */
+.skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.07) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius);height:108px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:660px){
+  .logo-pill,.sw-kbd{display:none}
+  .tab{padding:10px 12px;font-size:12px}
+  .grid,.cat-bars{grid-template-columns:1fr 1fr}
+  .sgrid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  #statsBar{display:none}
+  header,.tabs-bar{padding-left:1rem;padding-right:1rem}
+  .page{padding-left:1rem;padding-right:1rem}
+}
+@media(max-width:400px){.grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- mesh bg -->
+<div class="mesh"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr">
+    <div class="logo">🦷 Exocad Hub <span class="logo-pill" data-i="beta"></span></div>
+    <div class="sw">
+      <span class="sw-ico">🔍</span>
+      <input id="si" autocomplete="off" spellcheck="false"/>
+      <span class="sw-kbd">/</span>
+      <button class="sw-clr" id="sc">×</button>
+      <span class="fuzzy-pill" id="fuzzyPill"></span>
+    </div>
+    <div class="lang-wrap">
+      <button class="lang-btn" id="langBtn">🌐 <span id="langLabel">EN</span> ▾</button>
+      <div class="lang-dropdown" id="langDrop">
+        <div class="lang-opt active" data-lang="en">🇬🇧 English</div>
+        <div class="lang-opt" data-lang="tr">🇹🇷 Türkçe</div>
+        <div class="lang-opt" data-lang="de">🇩🇪 Deutsch</div>
+        <div class="lang-opt" data-lang="es">🇪🇸 Español</div>
+      </div>
+    </div>
+    <button class="hbtn" id="themeBtn">🌙</button>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div id="statsBar">
+  <div class="sbar-inner">
+    <div class="sitem"><div class="sdot" style="background:var(--green)"></div><span class="slabel" data-i="stat_libs"></span><span class="sval" id="st-libs">–</span></div>
+    <div class="sitem"><div class="sdot" style="background:var(--accent)"></div><span class="slabel" data-i="stat_soft"></span><span class="sval" id="st-soft">–</span></div>
+    <div class="sitem"><div class="sdot" style="background:var(--red)"></div><span class="slabel" data-i="stat_favs"></span><span class="sval" id="st-favs">0</span></div>
+    <div class="sitem"><div class="sdot" style="background:var(--yellow)"></div><span class="slabel" data-i="stat_dl"></span><span class="sval" id="st-dl">0</span></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <div class="tabs">
+    <div class="tab active" data-tab="libs"><span data-i="tab_libs"></span> <span class="tbadge" id="badge-libs">–</span></div>
+    <div class="tab" data-tab="software"><span data-i="tab_soft"></span> <span class="tbadge" id="badge-soft">–</span></div>
+    <div class="tab" data-tab="stats"><span data-i="tab_stats"></span> <span class="tbadge" id="badge-stats">📊</span></div>
+    <div class="tab" data-tab="favs"><span data-i="tab_favs"></span> <span class="tbadge" id="badge-favs">0</span></div>
+  </div>
+</div>
+
+<!-- ── LIBRARIES ── -->
+<div id="tabLibs" class="page">
+  <div class="toolbar">
+    <select class="sortsel" id="sortSel">
+      <option value="az" data-i="sort_az"></option>
+      <option value="za" data-i="sort_za"></option>
+    </select>
+  </div>
+  <div class="inforow" id="libsInfo"></div>
+  <div class="gwrap">
+    <div class="grid" id="libsGrid"></div>
+    <div id="sentinel"></div>
+  </div>
+</div>
+
+<!-- ── SOFTWARE ── -->
+<div id="tabSoftware" class="page" style="display:none">
+  <div class="toolbar">
+    <div class="chip scat active" data-scat="all" data-i="all"></div>
+    <div class="chip scat" data-scat="dentalcad">🦷 DentalCAD</div>
+    <div class="chip scat" data-scat="exoplan">🔬 exoplan</div>
+    <div class="chip scat" data-scat="chairside">🪑 ChairsideCAD</div>
+    <div class="chip scat" data-scat="partialcad">🧩 PartialCAD</div>
+    <div class="chip scat" data-scat="framework">⚙️ Framework</div>
+    <div class="chip scat" data-scat="implant_editor">🔩 Implant Editor</div>
+    <div class="chip scat" data-scat="ToothModelEditor">🪥 Tooth Editor</div>
+    <div class="chip scat" data-scat="addon">🔌 exoCAM</div>
+  </div>
+  <div class="inforow" id="softInfo"></div>
+  <div class="swrap" id="softWrap"></div>
+</div>
+
+<!-- ── STATS ── -->
+<div id="tabStats" class="page" style="display:none">
+  <div class="stats-page" id="statsPage"></div>
+</div>
+
+<!-- ── FAVORITES ── -->
+<div id="tabFavs" class="page" style="display:none">
+  <div class="inforow" id="favsInfo" style="padding-top:14px"></div>
+  <div class="gwrap"><div class="grid" id="favsGrid"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<button class="stbtn" id="stbtn">↑</button>
+
+<script>
+/* ═══════════════════════════════
+   TRANSLATIONS
+═══════════════════════════════ */
+const T = {
+  en:{
+    beta:'BETA', search_ph:'Search libraries… (press / to focus)',
+    tab_libs:'📦 Libraries', tab_soft:'💿 Software', tab_stats:'📊 Stats', tab_favs:'⭐ Favorites',
+    stat_libs:'Libraries', stat_soft:'Software Builds', stat_favs:'Favorites', stat_dl:'Downloads',
+    sort_az:'A → Z', sort_za:'Z → A', all:'All',
+    download:'Download', copy:'Copy link', fav_add:'Add to favorites', fav_rm:'Remove from favorites',
+    showing:'Showing', of:'of', libraries:'libraries', results:'results',
+    no_results_h:'No results', no_results_p:'Try a different search term',
+    no_favs_h:'No favorites yet', no_favs_p:'Click ☆ on any library card to save it here',
+    fuzzy_hint:'Fuzzy match — showing approximate results',
+    copied:'Link copied', fav_added:'Added to favorites', fav_removed:'Removed from favorites',
+    stats_title_kpi:'Overview', stats_title_top:'Top Downloads', stats_title_cats:'Category Breakdown',
+    stats_no_dl:'No downloads tracked yet — download some libraries!',
+    new_badge:'NEW',
+  },
+  tr:{
+    beta:'BETA', search_ph:'Kütüphane ara… (/ ile odaklan)',
+    tab_libs:'📦 Kütüphaneler', tab_soft:'💿 Yazılım', tab_stats:'📊 İstatistik', tab_favs:'⭐ Favoriler',
+    stat_libs:'Kütüphane', stat_soft:'Yazılım Sürümü', stat_favs:'Favori', stat_dl:'İndirme',
+    sort_az:'A → Z', sort_za:'Z → A', all:'Tümü',
+    download:'İndir', copy:'Linki kopyala', fav_add:'Favorilere ekle', fav_rm:'Favorilerden çıkar',
+    showing:'Gösterilen', of:'/', libraries:'kütüphane', results:'sonuç',
+    no_results_h:'Sonuç yok', no_results_p:'Farklı bir arama terimi deneyin',
+    no_favs_h:'Henüz favori yok', no_favs_p:'Herhangi bir karttaki ☆ butonuna tıklayın',
+    fuzzy_hint:'Benzerlik araması — yaklaşık sonuçlar gösteriliyor',
+    copied:'Link kopyalandı', fav_added:'Favorilere eklendi', fav_removed:'Favorilerden çıkarıldı',
+    stats_title_kpi:'Genel Bakış', stats_title_top:'En Çok İndirilenler', stats_title_cats:'Kategori Dağılımı',
+    stats_no_dl:'Henüz indirme kaydı yok — bazı kütüphaneleri indirin!',
+    new_badge:'YENİ',
+  },
+  de:{
+    beta:'BETA', search_ph:'Bibliothek suchen… (/ zum Fokussieren)',
+    tab_libs:'📦 Bibliotheken', tab_soft:'💿 Software', tab_stats:'📊 Statistik', tab_favs:'⭐ Favoriten',
+    stat_libs:'Bibliotheken', stat_soft:'Software-Builds', stat_favs:'Favoriten', stat_dl:'Downloads',
+    sort_az:'A → Z', sort_za:'Z → A', all:'Alle',
+    download:'Herunterladen', copy:'Link kopieren', fav_add:'Zu Favoriten', fav_rm:'Aus Favoriten',
+    showing:'Zeige', of:'von', libraries:'Bibliotheken', results:'Ergebnisse',
+    no_results_h:'Keine Ergebnisse', no_results_p:'Anderen Suchbegriff versuchen',
+    no_favs_h:'Noch keine Favoriten', no_favs_p:'☆ auf einer Karte klicken zum Speichern',
+    fuzzy_hint:'Ungefähre Suche — ähnliche Ergebnisse werden angezeigt',
+    copied:'Link kopiert', fav_added:'Zu Favoriten hinzugefügt', fav_removed:'Aus Favoriten entfernt',
+    stats_title_kpi:'Übersicht', stats_title_top:'Top Downloads', stats_title_cats:'Kategorieverteilung',
+    stats_no_dl:'Noch keine Downloads aufgezeichnet!',
+    new_badge:'NEU',
+  },
+  es:{
+    beta:'BETA', search_ph:'Buscar bibliotecas… (/ para enfocar)',
+    tab_libs:'📦 Bibliotecas', tab_soft:'💿 Software', tab_stats:'📊 Estadísticas', tab_favs:'⭐ Favoritos',
+    stat_libs:'Bibliotecas', stat_soft:'Compilaciones', stat_favs:'Favoritos', stat_dl:'Descargas',
+    sort_az:'A → Z', sort_za:'Z → A', all:'Todo',
+    download:'Descargar', copy:'Copiar enlace', fav_add:'Añadir a favoritos', fav_rm:'Quitar de favoritos',
+    showing:'Mostrando', of:'de', libraries:'bibliotecas', results:'resultados',
+    no_results_h:'Sin resultados', no_results_p:'Prueba con otro término',
+    no_favs_h:'Sin favoritos aún', no_favs_p:'Haz clic en ☆ en cualquier tarjeta',
+    fuzzy_hint:'Búsqueda difusa — mostrando resultados aproximados',
+    copied:'Enlace copiado', fav_added:'Añadido a favoritos', fav_removed:'Eliminado de favoritos',
+    stats_title_kpi:'Resumen', stats_title_top:'Más Descargados', stats_title_cats:'Distribución',
+    stats_no_dl:'Aún no hay descargas registradas',
+    new_badge:'NUEVO',
+  }
+};
+
+let lang = localStorage.getItem('exo_lang') || 'en';
+function t(k){ return (T[lang]||T.en)[k] || T.en[k] || k; }
+
+function applyLang(){
+  document.querySelectorAll('[data-i]').forEach(el => {
+    const k = el.dataset.i;
+    const v = t(k);
+    if(v) el.textContent = v;
+  });
+  document.getElementById('si').placeholder = t('search_ph');
+  document.getElementById('langLabel').textContent = lang.toUpperCase();
+  document.querySelectorAll('.lang-opt').forEach(o => o.classList.toggle('active', o.dataset.lang === lang));
+  document.querySelectorAll('option[data-i]').forEach(o => { o.textContent = t(o.dataset.i); });
+  if(currentTab === 'libs') renderLibs();
+  if(currentTab === 'favs') renderFavs();
+  if(currentTab === 'stats') renderStats();
+  if(currentTab === 'software') renderSoftware();
+}
+
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+const FILES_URL = 'files.json', HEX_URL = 'hex.json';
+let allFiles = [], hexData = {};
+let favs = JSON.parse(localStorage.getItem('exo_favs') || '[]');
+let dlCounts = JSON.parse(localStorage.getItem('exo_dl') || '{}');
+let currentSort = 'az', currentTab = 'libs', currentSCat = 'all';
+let lightMode = localStorage.getItem('exo_theme') === 'light';
+let filteredLibs = [], renderedCount = 0;
+const PAGE_SIZE = 40;
+
+if(lightMode){ document.documentElement.setAttribute('data-theme','light'); }
+document.getElementById('themeBtn').textContent = lightMode ? '☀️' : '🌙';
+
+/* ═══════════════════════════════
+   UTILS
+═══════════════════════════════ */
+let _tid;
+function toast(msg, icon='✓'){
+  const el = document.getElementById('toast');
+  el.innerHTML = `<span>${icon}</span>${msg}`;
+  el.classList.add('show');
+  clearTimeout(_tid);
+  _tid = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(() => toast(t('copied'),'📋'));
+}
+
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function norm(s){
+  if(!s) return '';
+  const m={'İ':'i','I':'i','ı':'i','Ş':'s','ş':'s','Ğ':'g','ğ':'g','Ü':'u','ü':'u','Ö':'o','ö':'o','Ç':'c','ç':'c'};
+  return s.replace(/[İIıŞşĞğÜüÖöÇç]/g, c => m[c]||c).toLowerCase();
+}
+
+function decodeB64(b64){
+  try{
+    const s = b64.replace(/-/g,'+').replace(/_/g,'/');
+    const p = s + '==='.slice((s.length+3)%4);
+    return decodeURIComponent(escape(atob(p)));
+  }catch(e){ try{ return atob(b64); }catch(e2){ return ''; } }
+}
+
+/* ═══════════════════════════════
+   FUZZY SEARCH
+═══════════════════════════════ */
+function trigrams(s){
+  const t = new Set();
+  for(let i=0;i<s.length-2;i++) t.add(s.slice(i,i+3));
+  return t;
+}
+function trigramSim(a,b){
+  if(a.length<3||b.length<3) return (a.includes(b)||b.includes(a)) ? 0.5 : 0;
+  const ta=trigrams(a), tb=trigrams(b);
+  let n=0; tb.forEach(x => { if(ta.has(x)) n++; });
+  return (2*n)/(ta.size+tb.size);
+}
+function fuzzyScore(name, q){
+  const s = norm(name), sq = norm(q);
+  if(!sq) return 100;
+  if(s === sq) return 100;
+  if(s.startsWith(sq)) return 92;
+  if(s.includes(sq)) return 82;
+  // subsequence check
+  let qi=0;
+  for(let si=0;si<s.length&&qi<sq.length;si++) if(s[si]===sq[qi]) qi++;
+  if(qi===sq.length) return 65 + (sq.length/s.length)*15;
+  // trigram
+  const ts = trigramSim(s,sq);
+  if(ts>0.3) return ts*55;
+  return 0;
+}
+
+let isFuzzyMode = false;
+function searchFiles(files, q){
+  if(!q || q==='*') return files.map(f => ({...f, _score:100}));
+  const scored = files
+    .map(f => ({...f, _score: fuzzyScore(f.name, q)}))
+    .filter(f => f._score > 0);
+  scored.sort((a,b) => b._score - a._score);
+  const hasExact = scored.some(f => f._score >= 80);
+  isFuzzyMode = !hasExact && scored.length > 0;
+  return scored;
+}
+
+/* highlight matching chars */
+function highlight(text, q){
+  if(!q||q==='*') return esc(text);
+  const sq = norm(q), st = norm(text);
+  if(st.includes(sq)){
+    const i = st.indexOf(sq);
+    return esc(text.slice(0,i)) + '<mark>' + esc(text.slice(i,i+sq.length)) + '</mark>' + esc(text.slice(i+sq.length));
+  }
+  return esc(text);
+}
+
+/* ═══════════════════════════════
+   FAVORITES & DOWNLOADS
+═══════════════════════════════ */
+function toggleFav(name){
+  const i = favs.indexOf(name);
+  if(i===-1){ favs.push(name); toast(t('fav_added'),'⭐'); }
+  else{ favs.splice(i,1); toast(t('fav_removed'),'🗑️'); }
+  localStorage.setItem('exo_favs', JSON.stringify(favs));
+  updateBadges();
+  if(currentTab==='libs') renderLibs();
+  if(currentTab==='favs') renderFavs();
+}
+
+function trackDownload(name){
+  dlCounts[name] = (dlCounts[name]||0) + 1;
+  localStorage.setItem('exo_dl', JSON.stringify(dlCounts));
+  document.getElementById('st-dl').textContent = Object.values(dlCounts).reduce((a,b)=>a+b,0);
+}
+
+/* ═══════════════════════════════
+   MAKE CARD
+═══════════════════════════════ */
+function makeCard(file, query=''){
+  const isFav = favs.includes(file.name);
+  const hasUrl = file.download_url && file.download_url.length > 30;
+  const safeUrl = (file.download_url||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  const sn = file.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  const d = document.createElement('div');
+  d.className = 'card';
+  d.innerHTML = `
+    <div class="card-top">
+      <div class="card-ico">📦</div>
+      <div class="card-name">${highlight(file.name, query)}</div>
+    </div>
+    <div class="card-actions">
+      <button class="btn-dl" ${hasUrl?'':'disabled'} onclick="trackDownload('${sn}');window.open('${safeUrl}','_blank')">${t('download')} ⬇</button>
+      <button class="bsm" title="${t('copy')}" onclick="copyText('${safeUrl}')">📋</button>
+      <button class="bsm ${isFav?'fav-on':''}" title="${isFav?t('fav_rm'):t('fav_add')}" onclick="toggleFav('${sn}')">${isFav?'⭐':'☆'}</button>
+    </div>`;
+  return d;
+}
+
+/* ═══════════════════════════════
+   RENDER LIBRARIES (virtual/paged)
+═══════════════════════════════ */
+function getFiltered(){
+  const q = document.getElementById('si').value.trim();
+  let res = searchFiles(allFiles, q);
+  if(!q) res.sort((a,b) => currentSort==='za' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name));
+  return res;
+}
+
+function renderLibs(){
+  const q = document.getElementById('si').value.trim();
+  filteredLibs = getFiltered();
+  renderedCount = 0;
+  isFuzzyMode = isFuzzyMode && q.length > 0;
+  const fp = document.getElementById('fuzzyPill');
+  fp.textContent = t('fuzzy_hint');
+  fp.classList.toggle('show', isFuzzyMode);
+
+  const grid = document.getElementById('libsGrid');
+  grid.innerHTML = '';
+  const total = allFiles.length, shown = filteredLibs.length;
+  document.getElementById('libsInfo').innerHTML =
+    `${t('showing')} <b>${shown}</b> ${t('of')} <b>${total}</b> ${t('libraries')}`;
+  if(!shown){
+    grid.innerHTML = `<div class="empty"><span class="empty-ico">🔍</span><h3>${t('no_results_h')}</h3><p>${t('no_results_p')}</p></div>`;
+    return;
+  }
+  loadMoreCards();
+}
+
+function loadMoreCards(){
+  const grid = document.getElementById('libsGrid');
+  const q = document.getElementById('si').value.trim();
+  const batch = filteredLibs.slice(renderedCount, renderedCount + PAGE_SIZE);
+  const frag = document.createDocumentFragment();
+  batch.forEach(f => frag.appendChild(makeCard(f, q)));
+  grid.appendChild(frag);
+  renderedCount += batch.length;
+}
+
+/* Infinite scroll sentinel */
+let observer;
+function setupObserver(){
+  if(observer) observer.disconnect();
+  observer = new IntersectionObserver(entries => {
+    if(entries[0].isIntersecting && renderedCount < filteredLibs.length) loadMoreCards();
+  }, {rootMargin:'200px'});
+  const s = document.getElementById('sentinel');
+  if(s) observer.observe(s);
+}
+
+/* ═══════════════════════════════
+   RENDER FAVORITES
+═══════════════════════════════ */
+function renderFavs(){
+  const q = document.getElementById('si').value.trim();
+  const grid = document.getElementById('favsGrid');
+  grid.innerHTML = '';
+  const res = allFiles.filter(f => favs.includes(f.name));
+  const filtered = q ? res.filter(f => fuzzyScore(f.name,q) > 0) : res;
+  document.getElementById('favsInfo').innerHTML = `<b>${filtered.length}</b> ${t('tab_favs').replace('⭐ ','').toLowerCase()}`;
+  if(!filtered.length){
+    grid.innerHTML = `<div class="empty"><span class="empty-ico">⭐</span><h3>${t('no_favs_h')}</h3><p>${t('no_favs_p')}</p></div>`;
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  filtered.forEach(f => frag.appendChild(makeCard(f, q)));
+  grid.appendChild(frag);
+}
+
+/* ═══════════════════════════════
+   RENDER SOFTWARE
+═══════════════════════════════ */
+const SMETA = {
+  dentalcad:        {label:'DentalCAD',         icon:'🦷',bg:'rgba(62,207,142,0.12)', color:'#3ecf8e'},
+  exoplan:          {label:'exoplan',            icon:'🔬',bg:'rgba(124,107,240,0.12)',color:'#a78fff'},
+  chairside:        {label:'ChairsideCAD',       icon:'🪑',bg:'rgba(96,180,240,0.12)', color:'#60b4f0'},
+  partialcad:       {label:'PartialCAD',         icon:'🧩',bg:'rgba(240,160,80,0.12)', color:'#f0a050'},
+  framework:        {label:'Framework',          icon:'⚙️', bg:'rgba(160,160,180,0.1)',color:'#9090a8'},
+  implant_editor:   {label:'Implant Editor',     icon:'🔩',bg:'rgba(240,96,96,0.12)',  color:'#f06060'},
+  ToothModelEditor: {label:'Tooth Model Editor', icon:'🪥',bg:'rgba(240,200,80,0.12)', color:'#f0c850'},
+  addon:            {label:'exoCAM Addon',       icon:'🔌',bg:'rgba(62,180,207,0.12)', color:'#3eb4cf'},
+};
+const SORDER = ['dentalcad','exoplan','chairside','partialcad','framework','implant_editor','ToothModelEditor','addon'];
+
+function cleanName(n){ return n.replace(/\.7z|\.zip|\.exe/gi,'').replace(/_/g,' ').trim(); }
+function getDate(n){ const m=n.match(/(\d{4})[.\s-](\d{2})[.\s-](\d{2})/); return m?`${m[1]}-${m[2]}-${m[3]}`:''; }
+
+function renderSoftware(){
+  const wrap = document.getElementById('softWrap');
+  wrap.innerHTML = '';
+  const q = norm(document.getElementById('si').value);
+  let shown=0;
+  const total = SORDER.reduce((a,k)=>a+(hexData[k]?.length||0),0);
+
+  SORDER.forEach(key => {
+    const items = hexData[key]; if(!items?.length) return;
+    if(currentSCat!=='all'&&currentSCat!==key) return;
+    const meta = SMETA[key]||{label:key,icon:'📦',bg:'rgba(124,107,240,0.12)',color:'#a78fff'};
+    const filtered = items.filter(it => !q||q==='*'||norm(it.Name).includes(q)||fuzzyScore(it.Name,q)>30);
+    if(!filtered.length) return;
+    shown+=filtered.length;
+    const sec=document.createElement('div'); sec.className='sgroup';
+    const grid=document.createElement('div'); grid.className='sgrid';
+    filtered.forEach(item => {
+      const url=item._decodedUrl||'', name=cleanName(item.Name), date=getDate(item.Name);
+      const safeUrl=url.replace(/'/g,"\\'");
+      const c=document.createElement('div'); c.className='scard';
+      c.innerHTML=`
+        <div class="sico" style="background:${meta.bg}"><span>${meta.icon}</span></div>
+        <div class="sinfo">
+          <div class="sname">${esc(name)}</div>
+          ${date?`<div class="ssub">📅 ${date}</div>`:''}
+        </div>
+        <div class="sacts">
+          <button class="scopy" title="${t('copy')}" onclick="copyText('${safeUrl}')">📋</button>
+          <a class="sdl" href="${url}" target="_blank" rel="noopener" title="${t('download')}" onclick="trackDownload('${esc(name)}')">⬇</a>
+        </div>`;
+      grid.appendChild(c);
+    });
+    sec.innerHTML=`<div class="sgtitle">${meta.icon} ${meta.label} <span class="sgcount">(${filtered.length})</span></div>`;
+    sec.appendChild(grid); wrap.appendChild(sec);
+  });
+  document.getElementById('softInfo').innerHTML=`${t('showing')} <b>${shown}</b> ${t('of')} <b>${total}</b> ${t('results')}`;
+  if(!shown) wrap.innerHTML=`<div class="empty"><span class="empty-ico">🔍</span><h3>${t('no_results_h')}</h3><p>${t('no_results_p')}</p></div>`;
+}
+
+/* ═══════════════════════════════
+   STATS
+═══════════════════════════════ */
+function renderStats(){
+  const page = document.getElementById('statsPage');
+  const totalLibs = allFiles.length;
+  const totalSoft = SORDER.reduce((a,k)=>a+(hexData[k]?.length||0),0);
+  const totalDl   = Object.values(dlCounts).reduce((a,b)=>a+b,0);
+  const totalFavs = favs.length;
+
+  // top downloads
+  const topDl = Object.entries(dlCounts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxDl  = topDl[0]?.[1] || 1;
+
+  // category breakdown for software
+  const catBreakdown = SORDER.map(k => ({
+    key:k, meta:SMETA[k], count:hexData[k]?.length||0
+  })).filter(x=>x.count>0);
+  const maxCat = Math.max(...catBreakdown.map(x=>x.count),1);
+
+  page.innerHTML = `
+    <div class="section-title">${t('stats_title_kpi')}</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-card-val" style="color:var(--green)">${totalLibs}</div><div class="stat-card-label">${t('stat_libs')}</div><div class="stat-card-sub">files.json</div></div>
+      <div class="stat-card"><div class="stat-card-val" style="color:var(--accent2)">${totalSoft}</div><div class="stat-card-label">${t('stat_soft')}</div><div class="stat-card-sub">hex.json</div></div>
+      <div class="stat-card"><div class="stat-card-val" style="color:var(--red)">${totalFavs}</div><div class="stat-card-label">${t('stat_favs')}</div><div class="stat-card-sub">localStorage</div></div>
+      <div class="stat-card"><div class="stat-card-val" style="color:var(--yellow)">${totalDl}</div><div class="stat-card-label">${t('stat_dl')}</div><div class="stat-card-sub">${t('stat_libs').toLowerCase()}</div></div>
+    </div>
+    <div class="section-title">${t('stats_title_top')}</div>
+    <div class="bar-list" id="topDlList"></div>
+    <div class="section-title">${t('stats_title_cats')}</div>
+    <div class="cat-bars" id="catBars"></div>`;
+
+  // top downloads list
+  const tdl = document.getElementById('topDlList');
+  if(!topDl.length){
+    tdl.innerHTML = `<p style="color:var(--text3);font-size:13px">${t('stats_no_dl')}</p>`;
+  } else {
+    topDl.forEach(([name,cnt]) => {
+      const row=document.createElement('div'); row.className='bar-item';
+      row.innerHTML=`<div class="bar-name" title="${esc(name)}">${esc(name)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxDl*100).toFixed(1)}%"></div></div>
+        <div class="bar-count">${cnt}</div>`;
+      tdl.appendChild(row);
+    });
+  }
+
+  // category bars
+  const cb = document.getElementById('catBars');
+  catBreakdown.forEach(({meta,count}) => {
+    const c=document.createElement('div'); c.className='cat-bar-card';
+    c.innerHTML=`<div class="cat-bar-name">${meta.icon} ${meta.label}</div>
+      <div class="cat-bar-prog"><div class="cat-bar-fill" style="width:${(count/maxCat*100).toFixed(1)}%;background:${meta.color}"></div></div>
+      <div class="cat-bar-nums"><span>${t('stat_soft')}</span><span>${count}</span></div>`;
+    cb.appendChild(c);
+  });
+}
+
+/* ═══════════════════════════════
+   BADGES & COUNTS
+═══════════════════════════════ */
+function updateBadges(){
+  const softTotal = SORDER.reduce((a,k)=>a+(hexData[k]?.length||0),0);
+  const totalDl   = Object.values(dlCounts).reduce((a,b)=>a+b,0);
+  document.getElementById('badge-libs').textContent  = allFiles.length || '–';
+  document.getElementById('badge-soft').textContent  = softTotal || '–';
+  document.getElementById('badge-favs').textContent  = favs.length;
+  document.getElementById('st-libs').textContent     = allFiles.length || '–';
+  document.getElementById('st-soft').textContent     = softTotal || '–';
+  document.getElementById('st-favs').textContent     = favs.length;
+  document.getElementById('st-dl').textContent       = totalDl;
+}
+
+/* ═══════════════════════════════
+   EVENTS
+═══════════════════════════════ */
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  ['Libs','Software','Stats','Favs'].forEach(n=>{
+    const el=document.getElementById(`tab${n}`);
+    if(el) el.style.display=n.toLowerCase()===tab?'':'none';
+  });
+  if(tab==='libs')     renderLibs();
+  if(tab==='software') renderSoftware();
+  if(tab==='stats')    renderStats();
+  if(tab==='favs')     renderFavs();
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+document.querySelectorAll('.scat').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.scat').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentSCat=chip.dataset.scat;
+    renderSoftware();
+  });
+});
+
+const si=document.getElementById('si'), sc=document.getElementById('sc');
+si.addEventListener('input',()=>{
+  sc.classList.toggle('show',si.value.length>0);
+  if(currentTab==='libs')     renderLibs();
+  else if(currentTab==='software') renderSoftware();
+  else if(currentTab==='favs')     renderFavs();
+});
+sc.addEventListener('click',()=>{ si.value=''; sc.classList.remove('show'); isFuzzyMode=false; renderLibs(); si.focus(); });
+document.getElementById('sortSel').addEventListener('change',e=>{ currentSort=e.target.value; renderLibs(); });
+
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  lightMode=!lightMode;
+  document.documentElement.setAttribute('data-theme',lightMode?'light':'');
+  document.getElementById('themeBtn').textContent=lightMode?'☀️':'🌙';
+  localStorage.setItem('exo_theme',lightMode?'light':'dark');
+});
+
+/* lang */
+document.getElementById('langBtn').addEventListener('click',e=>{
+  e.stopPropagation();
+  document.getElementById('langDrop').classList.toggle('open');
+});
+document.querySelectorAll('.lang-opt').forEach(o=>{
+  o.addEventListener('click',()=>{
+    lang=o.dataset.lang;
+    localStorage.setItem('exo_lang',lang);
+    document.getElementById('langDrop').classList.remove('open');
+    applyLang();
+  });
+});
+document.addEventListener('click',()=>document.getElementById('langDrop').classList.remove('open'));
+
+/* keyboard shortcuts */
+window.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement!==si){ e.preventDefault(); si.focus(); si.select(); }
+  if(e.key==='Escape'){ si.value=''; sc.classList.remove('show'); isFuzzyMode=false; renderLibs(); si.blur(); }
+});
+
+/* scroll top */
+const stbtn=document.getElementById('stbtn');
+window.addEventListener('scroll',()=>stbtn.classList.toggle('show',scrollY>500),{passive:true});
+stbtn.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+/* ═══════════════════════════════
+   LOAD DATA
+═══════════════════════════════ */
+function showSkeletons(id,n=12){
+  document.getElementById(id).innerHTML=Array(n).fill('<div class="skel"></div>').join('');
+}
+
+async function loadFiles(){
+  showSkeletons('libsGrid');
+  try{
+    const r=await fetch(FILES_URL+'?v='+Date.now());
+    allFiles=await r.json();
+  }catch(e){
+    document.getElementById('libsGrid').innerHTML=`<div class="empty"><span class="empty-ico">⚠️</span><h3>Load failed</h3><p>Could not load files.json</p></div>`;
+  }
+  updateBadges(); renderLibs(); setupObserver();
+}
+
+async function loadHex(){
+  try{
+    const r=await fetch(HEX_URL+'?v='+Date.now());
+    const raw=await r.json();
+    Object.keys(raw).forEach(cat=>{
+      if(Array.isArray(raw[cat])) raw[cat].forEach(item=>{ item._decodedUrl=decodeB64(item.Url); });
+    });
+    hexData=raw;
+  }catch(e){ console.warn('hex.json load failed',e); }
+  updateBadges();
+}
+
+Promise.all([loadFiles(), loadHex()]).then(()=>{ updateBadges(); applyLang(); });
+applyLang();
+</script>
+</body>
+</html>
