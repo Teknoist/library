@@ -1,0 +1,20 @@
+{
+  "source": "telegram_public_preview",
+  "channel": "https://t.me/DentalCADCAMLibrary",
+  "pages": 25,
+  "scanned_messages": 378,
+  "items": 226,
+  "allowed_extensions": [
+    ".7z",
+    ".dme",
+    ".implant",
+    ".library",
+    ".obj",
+    ".ply",
+    ".rar",
+    ".stl",
+    ".xml",
+    ".zip"
+  ],
+  "updated_at": "2026-07-01T05:37:21.871623+00:00"
+}
