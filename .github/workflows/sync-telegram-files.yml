@@ -1,0 +1,44 @@
+name: Sync Telegram File Messages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip requests beautifulsoup4
+
+      - name: Sync public Telegram file messages
+        env:
+          TG_CHANNEL: "DentalCADCAMLibrary"
+          TG_PAGES: "25"
+          TG_ALLOWED_EXTENSIONS: ".zip,.7z,.rar,.stl,.obj,.ply,.dme,.xml,.library,.implant"
+        run: python scripts/sync_telegram_public.py
+
+      - name: Commit changed Telegram JSON
+        run: |
+          if git diff --quiet -- telegram.json telegram_meta.json; then
+            echo "No Telegram changes to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add telegram.json telegram_meta.json
+            git commit -m "Sync Telegram file messages"
+            git push
+          fi
