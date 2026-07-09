@@ -2,8 +2,8 @@
   "source": "telegram_public_preview",
   "channel": "https://t.me/DentalCADCAMLibrary",
   "pages": 25,
-  "scanned_messages": 374,
-  "items": 228,
+  "scanned_messages": 373,
+  "items": 229,
   "allowed_extensions": [
     ".7z",
     ".dme",
@@ -16,5 +16,5 @@
     ".xml",
     ".zip"
   ],
-  "updated_at": "2026-07-09T15:37:41.218401+00:00"
+  "updated_at": "2026-07-09T20:10:11.798040+00:00"
 }
