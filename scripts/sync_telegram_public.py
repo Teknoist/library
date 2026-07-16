@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build telegram.json from public Telegram channel file messages.
 
-Reads the public preview page at https://t.me/s/DentalCADCAMLibrary.
+Reads public preview pages like https://t.me/s/DentalCADCAMLibrary.
 It only indexes file/document cards whose visible filename ends with an allowed extension.
 Files are not downloaded or rehosted; download_url points to the Telegram message.
 """
@@ -21,7 +21,13 @@ from bs4 import BeautifulSoup
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "telegram.json"
 META = ROOT / "telegram_meta.json"
-CHANNEL = os.getenv("TG_CHANNEL", "DentalCADCAMLibrary").strip().lstrip("@")
+DEFAULT_CHANNELS = "DentalCADCAMLibrary,ExoCADCAMLibrary"
+CHANNELS_RAW = os.getenv("TG_CHANNELS") or os.getenv("TG_CHANNEL") or DEFAULT_CHANNELS
+CHANNELS = [
+    channel.strip().lstrip("@").removeprefix("https://t.me/").removeprefix("t.me/")
+    for channel in CHANNELS_RAW.split(",")
+    if channel.strip()
+]
 PAGES = int(os.getenv("TG_PAGES", "25"))
 DELAY = float(os.getenv("TG_DELAY", "0.6"))
 ALLOWED = {
@@ -32,7 +38,6 @@ ALLOWED = {
     ).split(",")
     if x.strip()
 }
-BASE = f"https://t.me/s/{CHANNEL}"
 
 
 def clean_name(value: str) -> str:
@@ -60,7 +65,7 @@ def fetch(url: str) -> str:
     return response.text
 
 
-def parse_page(html: str) -> tuple[list[dict], str | None, int]:
+def parse_page(html: str, channel: str, base_url: str) -> tuple[list[dict], str | None, int]:
     soup = BeautifulSoup(html, "html.parser")
     items: list[dict] = []
     messages = soup.select(".tgme_widget_message")
@@ -84,8 +89,10 @@ def parse_page(html: str) -> tuple[list[dict], str | None, int]:
         items.append(
             {
                 "name": file_name,
-                "download_url": f"https://t.me/{CHANNEL}/{mid}",
+                "download_url": f"https://t.me/{channel}/{mid}",
                 "source": "telegram",
+                "channel": channel,
+                "channel_url": f"https://t.me/{channel}",
                 "file_name": file_name,
                 "message_id": mid,
                 "date": date,
@@ -93,35 +100,41 @@ def parse_page(html: str) -> tuple[list[dict], str | None, int]:
         )
 
     more = soup.select_one("a.tme_messages_more")
-    next_url = urljoin(BASE, more.get("href")) if more and more.get("href") else None
+    next_url = urljoin(base_url, more.get("href")) if more and more.get("href") else None
     return items, next_url, len(messages)
 
 
 def main() -> int:
-    url = BASE
-    by_id: dict[int, dict] = {}
+    by_message: dict[tuple[str, int], dict] = {}
     scanned_messages = 0
     fetched_pages = 0
 
-    for _ in range(PAGES):
-        html = fetch(url)
-        fetched_pages += 1
-        items, next_url, message_count = parse_page(html)
-        scanned_messages += message_count
-        for item in items:
-            by_id[item["message_id"]] = item
-        if not next_url or next_url == url:
-            break
-        url = next_url
-        time.sleep(DELAY)
+    for channel in CHANNELS:
+        base_url = f"https://t.me/s/{channel}"
+        url = base_url
 
-    data = sorted(by_id.values(), key=lambda x: (x["name"].casefold(), x["message_id"]))
+        for _ in range(PAGES):
+            html = fetch(url)
+            fetched_pages += 1
+            items, next_url, message_count = parse_page(html, channel, base_url)
+            scanned_messages += message_count
+            for item in items:
+                by_message[(channel, item["message_id"])] = item
+            if not next_url or next_url == url:
+                break
+            url = next_url
+            time.sleep(DELAY)
+
+    data = sorted(
+        by_message.values(),
+        key=lambda x: (x["name"].casefold(), x["channel"].casefold(), x["message_id"]),
+    )
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     META.write_text(
         json.dumps(
             {
                 "source": "telegram_public_preview",
-                "channel": f"https://t.me/{CHANNEL}",
+                "channels": [f"https://t.me/{channel}" for channel in CHANNELS],
                 "pages": fetched_pages,
                 "scanned_messages": scanned_messages,
                 "items": len(data),
@@ -134,7 +147,10 @@ def main() -> int:
         + "\n",
         encoding="utf-8",
     )
-    print(f"Indexed {len(data)} Telegram file messages from {fetched_pages} pages")
+    print(
+        f"Indexed {len(data)} Telegram file messages from "
+        f"{len(CHANNELS)} channels and {fetched_pages} pages"
+    )
     return 0
 
 

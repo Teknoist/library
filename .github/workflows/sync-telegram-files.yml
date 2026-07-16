@@ -26,7 +26,7 @@ jobs:
 
       - name: Sync public Telegram file messages
         env:
-          TG_CHANNEL: "DentalCADCAMLibrary"
+          TG_CHANNELS: "DentalCADCAMLibrary,ExoCADCAMLibrary"
           TG_PAGES: "25"
           TG_ALLOWED_EXTENSIONS: ".zip,.7z,.rar,.stl,.obj,.ply,.dme,.xml,.library,.implant"
         run: python scripts/sync_telegram_public.py
