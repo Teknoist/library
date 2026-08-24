@@ -5,8 +5,8 @@
     "https://t.me/ExoCADCAMLibrary"
   ],
   "pages": 50,
-  "scanned_messages": 797,
-  "items": 363,
+  "scanned_messages": 800,
+  "items": 365,
   "allowed_extensions": [
     ".7z",
     ".dme",
@@ -19,5 +19,5 @@
     ".xml",
     ".zip"
   ],
-  "updated_at": "2026-08-24T07:32:46.840659+00:00"
+  "updated_at": "2026-08-24T13:18:09.711833+00:00"
 }
