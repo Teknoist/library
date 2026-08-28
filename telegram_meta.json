@@ -4,9 +4,9 @@
     "https://t.me/DentalCADCAMLibrary",
     "https://t.me/ExoCADCAMLibrary"
   ],
-  "pages": 50,
-  "scanned_messages": 795,
-  "items": 357,
+  "pages": 42,
+  "scanned_messages": 671,
+  "items": 353,
   "allowed_extensions": [
     ".7z",
     ".dme",
@@ -19,5 +19,5 @@
     ".xml",
     ".zip"
   ],
-  "updated_at": "2026-08-27T22:25:53.477525+00:00"
+  "updated_at": "2026-08-28T11:31:28.846264+00:00"
 }
