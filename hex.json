@@ -2,23 +2,27 @@
     "framework": [
         {
             "Name": "exocadFramework2019.exe",
-            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAxOS5leGU="
+            "Url": "http://download.exocad.com/delivery/exocadFramework2019.exe"
         },
         {
             "Name": "exocadFramework2020.exe",
-            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyMC5leGU="
+            "Url": "http://download.exocad.com/delivery/exocadFramework2020.exe"
         },
         {
             "Name": "exocadFramework2022.exe",
-            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyMi5leGU="
+            "Url": "http://download.exocad.com/delivery/exocadFramework2022.exe"
         },
         {
             "Name": "exocadFramework2023.exe",
-            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyMy5leGU="
+            "Url": "http://download.exocad.com/delivery/exocadFramework2023.exe"
         },
         {
             "Name": "exocadFramework2024.exe",
-            "Url": "aHR0cDovL2Rvd25sb2FkLmV4b2NhZC5jb20vZGVsaXZlcnkvZXhvY2FkRnJhbWV3b3JrMjAyNC5leGU="
+            "Url": "http://download.exocad.com/delivery/exocadFramework2024.exe"
+        }
+        {
+            "Name": "exocadFramework2025.exe",
+            "Url": "http://download.exocad.com/delivery/exocadFramework2025.exe"
         }
     ],
     "chairside": [
