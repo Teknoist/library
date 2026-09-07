@@ -4,6 +4,11 @@
     "https://t.me/DentalCADCAMLibrary",
     "https://t.me/ExoCADCAMLibrary"
   ],
+  "synced_channels": [
+    "https://t.me/DentalCADCAMLibrary",
+    "https://t.me/ExoCADCAMLibrary"
+  ],
+  "failed_channels": {},
   "pages": 50,
   "scanned_messages": 792,
   "items": 355,
@@ -19,5 +24,5 @@
     ".xml",
     ".zip"
   ],
-  "updated_at": "2026-09-06T20:30:29.960658+00:00"
+  "updated_at": "2026-09-07T04:53:09.519455+00:00"
 }
