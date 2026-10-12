@@ -10,8 +10,8 @@
   ],
   "failed_channels": {},
   "pages": 50,
-  "scanned_messages": 826,
-  "items": 368,
+  "scanned_messages": 813,
+  "items": 369,
   "allowed_extensions": [
     ".7z",
     ".dme",
@@ -24,5 +24,5 @@
     ".xml",
     ".zip"
   ],
-  "updated_at": "2026-10-12T06:09:32.453260+00:00"
+  "updated_at": "2026-10-12T15:42:15.134328+00:00"
 }
